@@ -433,56 +433,52 @@
         color: 0x030810, specular: 0x0044aa, shininess: 40, emissive: 0x000308
     });
 
-    // Torso
-    fig.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.34, 0.55, 12), FM), {position: new THREE.Vector3(0, 1.55, 0)}));
-    fig.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.32, 0.55, 12), FM), {position: new THREE.Vector3(0, 1.05, 0)}));
+    function addPart(geo, x, y, z, rx, ry, rz, sx, sy, sz) {
+        const m = new THREE.Mesh(geo, FM);
+        m.position.set(x, y, z);
+        if (rx||ry||rz) m.rotation.set(rx||0, ry||0, rz||0);
+        if (sx) m.scale.set(sx, sy||sx, sz||sx);
+        fig.add(m);
+        return m;
+    }
+
+    // Torso upper
+    addPart(new THREE.CylinderGeometry(0.28, 0.34, 0.55, 12), 0, 1.55, 0);
+    // Torso lower
+    addPart(new THREE.CylinderGeometry(0.34, 0.32, 0.55, 12), 0, 1.05, 0);
     // Hips
-    fig.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 10, 0, Math.PI*2, 0, Math.PI*0.5), FM), {position: new THREE.Vector3(0, 0.82, 0)}));
-    // Chest volume
-    fig.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.3, 10, 10), FM), {position: new THREE.Vector3(0, 1.45, 0.05)}));
-
+    addPart(new THREE.SphereGeometry(0.32, 10, 10, 0, Math.PI*2, 0, Math.PI*0.5), 0, 0.82, 0);
+    // Chest
+    addPart(new THREE.SphereGeometry(0.3, 10, 10), 0, 1.45, 0.05);
     // Head
-    const headM = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 14), FM);
-    headM.position.y = 2.08; headM.scale.set(1, 1.08, 1); fig.add(headM);
+    addPart(new THREE.SphereGeometry(0.22, 14, 14), 0, 2.08, 0, 0, 0, 0, 1, 1.08, 1);
     // Hood
-    const hood = new THREE.Mesh(new THREE.SphereGeometry(0.29, 14, 10, 0, Math.PI*2, 0, Math.PI*0.55), FM);
-    hood.position.set(0, 2.12, -0.03); hood.scale.set(1.05, 1.15, 1.25); fig.add(hood);
+    addPart(new THREE.SphereGeometry(0.29, 14, 10, 0, Math.PI*2, 0, Math.PI*0.55), 0, 2.12, -0.03, 0, 0, 0, 1.05, 1.15, 1.25);
     // Hood rim
-    const hoodRim = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.03, 8, 20, Math.PI), FM);
-    hoodRim.position.set(0, 2.0, 0.12); hoodRim.rotation.x = -0.3; fig.add(hoodRim);
+    addPart(new THREE.TorusGeometry(0.26, 0.03, 8, 20, Math.PI), 0, 2.0, 0.12, -0.3, 0, 0);
     // Neck
-    fig.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 0.18, 8), FM), {position: new THREE.Vector3(0, 1.88, 0)}));
-
+    addPart(new THREE.CylinderGeometry(0.12, 0.15, 0.18, 8), 0, 1.88, 0);
     // Shoulders
-    const shG = new THREE.SphereGeometry(0.15, 10, 10);
-    fig.add(Object.assign(new THREE.Mesh(shG, FM), {position: new THREE.Vector3(-0.42, 1.72, 0)}));
-    fig.add(Object.assign(new THREE.Mesh(shG, FM), {position: new THREE.Vector3(0.42, 1.72, 0)}));
-
+    addPart(new THREE.SphereGeometry(0.15, 10, 10), -0.42, 1.72, 0);
+    addPart(new THREE.SphereGeometry(0.15, 10, 10), 0.42, 1.72, 0);
     // Upper arms
-    const uaG = new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8);
-    const la = new THREE.Mesh(uaG, FM); la.position.set(-0.46, 1.42, 0); la.rotation.z = 0.1; fig.add(la);
-    const ra = new THREE.Mesh(uaG, FM); ra.position.set(0.46, 1.42, 0); ra.rotation.z = -0.1; fig.add(ra);
+    addPart(new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8), -0.46, 1.42, 0, 0, 0, 0.1);
+    addPart(new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8), 0.46, 1.42, 0, 0, 0, -0.1);
     // Forearms
-    const faG = new THREE.CylinderGeometry(0.07, 0.08, 0.45, 8);
-    const lfa = new THREE.Mesh(faG, FM); lfa.position.set(-0.48, 1.0, 0.04); lfa.rotation.z = 0.04; fig.add(lfa);
-    const rfa = new THREE.Mesh(faG, FM); rfa.position.set(0.48, 1.0, 0.04); rfa.rotation.z = -0.04; fig.add(rfa);
+    addPart(new THREE.CylinderGeometry(0.07, 0.08, 0.45, 8), -0.48, 1.0, 0.04, 0, 0, 0.04);
+    addPart(new THREE.CylinderGeometry(0.07, 0.08, 0.45, 8), 0.48, 1.0, 0.04, 0, 0, -0.04);
     // Hands
-    const handG = new THREE.SphereGeometry(0.06, 8, 8);
-    fig.add(Object.assign(new THREE.Mesh(handG, FM), {position: new THREE.Vector3(-0.49, 0.76, 0.06)}));
-    fig.add(Object.assign(new THREE.Mesh(handG, FM), {position: new THREE.Vector3(0.49, 0.76, 0.06)}));
-
+    addPart(new THREE.SphereGeometry(0.06, 8, 8), -0.49, 0.76, 0.06);
+    addPart(new THREE.SphereGeometry(0.06, 8, 8), 0.49, 0.76, 0.06);
     // Upper legs
-    const ulG = new THREE.CylinderGeometry(0.13, 0.11, 0.55, 8);
-    const ll = new THREE.Mesh(ulG, FM); ll.position.set(-0.17, 0.52, 0); fig.add(ll);
-    const rl = new THREE.Mesh(ulG, FM); rl.position.set(0.17, 0.52, 0); fig.add(rl);
+    addPart(new THREE.CylinderGeometry(0.13, 0.11, 0.55, 8), -0.17, 0.52, 0);
+    addPart(new THREE.CylinderGeometry(0.13, 0.11, 0.55, 8), 0.17, 0.52, 0);
     // Lower legs
-    const llG = new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8);
-    const lll = new THREE.Mesh(llG, FM); lll.position.set(-0.17, 0.05, 0.02); fig.add(lll);
-    const rll = new THREE.Mesh(llG, FM); rll.position.set(0.17, 0.05, 0.02); fig.add(rll);
+    addPart(new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8), -0.17, 0.05, 0.02);
+    addPart(new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8), 0.17, 0.05, 0.02);
     // Feet
-    const ftG = new THREE.BoxGeometry(0.12, 0.06, 0.26);
-    fig.add(Object.assign(new THREE.Mesh(ftG, FM), {position: new THREE.Vector3(-0.17, -0.18, 0.05)}));
-    fig.add(Object.assign(new THREE.Mesh(ftG, FM), {position: new THREE.Vector3(0.17, -0.18, 0.05)}));
+    addPart(new THREE.BoxGeometry(0.12, 0.06, 0.26), -0.17, -0.18, 0.05);
+    addPart(new THREE.BoxGeometry(0.12, 0.06, 0.26), 0.17, -0.18, 0.05);
 
     fig.position.set(0, 0, 0.5);
     scene.add(fig);
