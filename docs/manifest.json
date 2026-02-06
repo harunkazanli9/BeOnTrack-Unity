@@ -1,0 +1,11 @@
+{
+    "name": "BeOnTrack",
+    "short_name": "BeOnTrack",
+    "description": "Deine Fitness Journey visualisiert",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#141828",
+    "theme_color": "#141828",
+    "orientation": "portrait",
+    "icons": []
+}
