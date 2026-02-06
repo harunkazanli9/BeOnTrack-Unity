@@ -9,747 +9,448 @@
     <title>BeOnTrack</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *{margin:0;padding:0;box-sizing:border-box}
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        body {
-            background: #000;
-            overflow: hidden;
-            touch-action: none;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
-            color: #fff;
-        }
-        #scene-container { position: fixed; top:0; left:0; width:100vw; height:100vh; }
+        body{background:#000;overflow:hidden;touch-action:none;font-family:'Inter',-apple-system,sans-serif;-webkit-user-select:none;user-select:none;color:#fff}
+        #c{position:fixed;top:0;left:0;width:100vw;height:100vh}
 
-        /* ---- TOP BAR ---- */
-        #top-bar {
-            position: fixed; top:0; left:0; right:0;
-            padding: max(env(safe-area-inset-top),12px) 20px 14px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 20;
-            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
-        }
-        .top-stat { text-align: center; }
-        .top-stat-value {
-            font-size: 22px; font-weight: 800; color: #00aaff;
-            text-shadow: 0 0 20px rgba(0,170,255,0.5);
-        }
-        .top-stat-label {
-            font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.3); margin-top: 2px;
-        }
+        #top-bar{position:fixed;top:0;left:0;right:0;padding:max(env(safe-area-inset-top),12px) 20px 14px;display:flex;justify-content:space-between;z-index:20;background:linear-gradient(180deg,rgba(0,0,0,0.85) 0%,transparent 100%)}
+        .ts{text-align:center}
+        .tv{font-size:22px;font-weight:800;color:#00aaff;text-shadow:0 0 20px rgba(0,170,255,0.5)}
+        .tl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3);margin-top:2px}
 
-        /* ---- BOTTOM NAV ---- */
-        #bottom-nav {
-            position: fixed; bottom:0; left:0; right:0;
-            background: rgba(0,0,0,0.94);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0,170,255,0.12);
-            display: flex; justify-content: space-around;
-            padding: 8px 0; padding-bottom: max(8px, env(safe-area-inset-bottom));
-            z-index: 20;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            cursor: pointer; opacity: 0.35; transition: all 0.3s;
-            padding: 4px 8px; border: none; background: none; color: #fff;
-        }
-        .nav-item:active { transform: scale(0.9); }
-        .nav-item.active { opacity: 1; color: #00aaff; }
-        .nav-item svg { width: 22px; height: 22px; }
-        .nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
+        #bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,170,255,0.12);display:flex;justify-content:space-around;padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:20}
+        .ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.35;transition:all .3s;padding:4px 8px;border:none;background:none;color:#fff}
+        .ni:active{transform:scale(0.9)}.ni.active{opacity:1;color:#00aaff}
+        .ni svg{width:22px;height:22px}.nl{font-size:9px;font-weight:600;letter-spacing:.5px}
 
-        /* ---- FAB ---- */
-        #add-btn {
-            position: fixed; right: 20px; bottom: 85px;
-            width: 54px; height: 54px; border-radius: 50%;
-            background: linear-gradient(135deg, #0055dd, #00aaff);
-            border: none; color: #fff; font-size: 26px; font-weight: 300;
-            cursor: pointer; z-index: 21;
-            box-shadow: 0 4px 30px rgba(0,170,255,0.35), 0 0 50px rgba(0,170,255,0.1);
-            transition: transform 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        #add-btn:active { transform: scale(0.88); }
+        #fab{position:fixed;right:20px;bottom:85px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0055dd,#00aaff);border:none;color:#fff;font-size:26px;font-weight:300;cursor:pointer;z-index:21;box-shadow:0 4px 30px rgba(0,170,255,0.35),0 0 50px rgba(0,170,255,0.1);transition:transform .2s;display:flex;align-items:center;justify-content:center}
+        #fab:active{transform:scale(0.88)}
 
-        /* ---- WORKOUT DETAIL POPUP ---- */
-        #workout-detail {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 200; display: flex; align-items: stretch; justify-content: center;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.35s;
-        }
-        #workout-detail.show { opacity: 1; pointer-events: auto; }
+        /* Detail Popup */
+        #det{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s}
+        #det.show{opacity:1;pointer-events:auto}
+        .dc{position:relative;width:92%;max-width:420px;max-height:82vh;background:linear-gradient(165deg,rgba(8,18,42,0.96),rgba(4,10,28,0.98));border:1px solid rgba(0,120,255,0.25);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,100,255,0.12),inset 0 1px 0 rgba(0,150,255,0.1);transform:scale(0.92) translateY(20px);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1)}
+        #det.show .dc{transform:scale(1) translateY(0)}
+        .dc::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:20px;background:linear-gradient(135deg,rgba(0,150,255,0.3),transparent 30%,transparent 70%,rgba(0,100,255,0.2));pointer-events:none;z-index:0}
+        .dh{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid rgba(0,100,255,0.15)}
+        .dhl{display:flex;align-items:center;gap:12px}
+        .dhi{display:flex;gap:8px}
+        .dhi button{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:4px}
+        .dhi button svg{width:18px;height:18px}
+        .dt{font-size:20px;font-weight:700}.dd{font-size:13px;color:rgba(255,255,255,0.4)}
+        .dx{background:none;border:none;color:rgba(255,255,255,0.5);font-size:28px;cursor:pointer;padding:0 4px;line-height:1}
+        .db{position:relative;z-index:1;flex:1;overflow-y:auto;padding:8px 16px 20px;-webkit-overflow-scrolling:touch}
+        .db::-webkit-scrollbar{width:3px}.db::-webkit-scrollbar-thumb{background:rgba(0,150,255,0.3);border-radius:3px}
+        .ex{padding:14px 0;border-bottom:1px solid rgba(0,80,180,0.15)}.ex:last-child{border-bottom:none}
+        .et{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+        .ei{width:52px;height:40px;border-radius:6px;background:rgba(0,80,180,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .en{font-size:16px;font-weight:700}.em{font-size:12px;color:rgba(0,180,255,0.7);font-weight:500;margin-top:1px}
+        .sr{display:flex;flex-wrap:wrap;gap:8px}
+        .sp{display:flex;background:rgba(0,60,140,0.2);border:1px solid rgba(0,100,200,0.25);border-radius:8px;overflow:hidden}
+        .sk,.sx{padding:6px 10px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.75)}
+        .sk{border-right:1px solid rgba(0,100,200,0.2)}.sx{color:rgba(255,255,255,0.5)}
 
-        .detail-card {
-            position: relative;
-            width: 92%; max-width: 420px;
-            margin: auto;
-            max-height: 82vh;
-            background: linear-gradient(165deg, rgba(8,18,42,0.95), rgba(4,10,28,0.98));
-            border: 1px solid rgba(0,120,255,0.25);
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex; flex-direction: column;
-            box-shadow: 0 0 60px rgba(0,100,255,0.12), inset 0 1px 0 rgba(0,150,255,0.1);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        #workout-detail.show .detail-card { transform: scale(1) translateY(0); }
+        /* Milestone */
+        #ms{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .4s}
+        #ms.show{opacity:1;pointer-events:auto}
+        .mc{background:linear-gradient(135deg,rgba(0,80,200,0.15),rgba(0,150,255,0.08));border:1px solid rgba(0,170,255,0.3);border-radius:24px;padding:40px;text-align:center;max-width:300px;transform:scale(0.8);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1)}
+        #ms.show .mc{transform:scale(1)}
+        .mc h2{font-size:52px;font-weight:900;color:#00aaff;text-shadow:0 0 40px rgba(0,170,255,0.5)}
+        .mc p{color:rgba(255,255,255,0.55);font-size:16px;margin-top:8px}
+        .mc button{margin-top:20px;background:linear-gradient(135deg,#0055dd,#00aaff);color:#fff;border:none;padding:13px 36px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 
-        /* Corner glow accents */
-        .detail-card::before {
-            content: '';
-            position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, rgba(0,150,255,0.3), transparent 30%, transparent 70%, rgba(0,100,255,0.2));
-            pointer-events: none; z-index: 0;
-        }
+        @keyframes cf{0%{transform:translateY(-10vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+        .cf{position:fixed;z-index:299;pointer-events:none;animation:cf 3s ease-in forwards}
+        .hint{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.18);font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:15;animation:ph 2.5s infinite}
+        @keyframes ph{0%,100%{opacity:.15}50%{opacity:.4}}
 
-        .detail-header {
-            position: relative; z-index: 1;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 20px 14px;
-            border-bottom: 1px solid rgba(0,100,255,0.15);
-        }
-        .detail-header-left { display: flex; align-items: center; gap: 12px; }
-        .detail-header-icons { display: flex; gap: 8px; }
-        .detail-header-icons button {
-            background: none; border: none; color: rgba(255,255,255,0.4);
-            cursor: pointer; padding: 4px; transition: color 0.2s;
-        }
-        .detail-header-icons button:hover { color: #00aaff; }
-        .detail-header-icons button svg { width: 18px; height: 18px; }
-        .detail-title {
-            font-size: 20px; font-weight: 700;
-            color: #fff;
-        }
-        .detail-date {
-            font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 400;
-        }
-        .detail-close {
-            background: none; border: none; color: rgba(255,255,255,0.5);
-            font-size: 28px; cursor: pointer; padding: 0 4px; line-height: 1;
-            transition: color 0.2s;
-        }
-        .detail-close:hover { color: #fff; }
-
-        .detail-body {
-            position: relative; z-index: 1;
-            flex: 1; overflow-y: auto; padding: 8px 16px 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .detail-body::-webkit-scrollbar { width: 3px; }
-        .detail-body::-webkit-scrollbar-thumb { background: rgba(0,150,255,0.3); border-radius: 3px; }
-
-        /* Exercise row */
-        .exercise {
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(0,80,180,0.15);
-        }
-        .exercise:last-child { border-bottom: none; }
-        .exercise-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .exercise-icon {
-            width: 52px; height: 40px; border-radius: 6px;
-            background: rgba(0,80,180,0.15);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
-        }
-        .exercise-info { flex: 1; }
-        .exercise-name { font-size: 16px; font-weight: 700; color: #fff; }
-        .exercise-muscle { font-size: 12px; color: rgba(0,180,255,0.7); font-weight: 500; margin-top: 1px; }
-
-        .sets-row { display: flex; flex-wrap: wrap; gap: 8px; }
-        .set-pill {
-            display: flex; background: rgba(0,60,140,0.2);
-            border: 1px solid rgba(0,100,200,0.25); border-radius: 8px;
-            overflow: hidden;
-        }
-        .set-kg, .set-reps {
-            padding: 6px 10px; font-size: 13px; font-weight: 600;
-            color: rgba(255,255,255,0.75);
-        }
-        .set-kg { border-right: 1px solid rgba(0,100,200,0.2); }
-        .set-reps { color: rgba(255,255,255,0.5); }
-
-        /* ---- MILESTONE POPUP ---- */
-        #milestone-popup {
-            position: fixed; top:0; left:0; right:0; bottom:0;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 300; background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            opacity: 0; pointer-events: none; transition: opacity 0.4s;
-        }
-        #milestone-popup.show { opacity: 1; pointer-events: auto; }
-        .ms-card {
-            background: linear-gradient(135deg, rgba(0,80,200,0.15), rgba(0,150,255,0.08));
-            border: 1px solid rgba(0,170,255,0.3); border-radius: 24px;
-            padding: 40px; text-align: center; max-width: 300px;
-            transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        #milestone-popup.show .ms-card { transform: scale(1); }
-        .ms-card h2 { font-size: 52px; font-weight: 900; color: #00aaff; text-shadow: 0 0 40px rgba(0,170,255,0.5); }
-        .ms-card p { color: rgba(255,255,255,0.55); font-size: 16px; margin-top: 8px; }
-        .ms-card button {
-            margin-top: 20px; background: linear-gradient(135deg, #0055dd, #00aaff);
-            color: #fff; border: none; padding: 13px 36px; border-radius: 14px;
-            font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
-        }
-
-        /* Confetti */
-        @keyframes confetti-fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity:1; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity:0; }
-        }
-        .confetti { position: fixed; z-index: 299; pointer-events: none; animation: confetti-fall 3s ease-in forwards; }
-
-        /* Tap hint glow on panels */
-        .tap-hint {
-            position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%);
-            color: rgba(255,255,255,0.18); font-size: 10px;
-            letter-spacing: 2px; text-transform: uppercase; z-index: 15;
-            animation: pulse-h 2.5s infinite;
-        }
-        @keyframes pulse-h { 0%,100%{opacity:0.15} 50%{opacity:0.4} }
+        /* Loading */
+        #loader{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .6s}
+        #loader.done{opacity:0;pointer-events:none}
+        .loader-ring{width:40px;height:40px;border:3px solid rgba(0,170,255,0.15);border-top:3px solid #00aaff;border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
 <body>
-    <div id="scene-container"></div>
+    <div id="loader"><div class="loader-ring"></div></div>
+    <div id="c"></div>
 
     <div id="top-bar">
-        <div class="top-stat"><div class="top-stat-value" id="s-workouts">0</div><div class="top-stat-label">Workouts</div></div>
-        <div class="top-stat"><div class="top-stat-value" id="s-streak">0</div><div class="top-stat-label">Streak</div></div>
-        <div class="top-stat"><div class="top-stat-value" id="s-volume">0t</div><div class="top-stat-label">Volumen</div></div>
+        <div class="ts"><div class="tv" id="sw">0</div><div class="tl">Workouts</div></div>
+        <div class="ts"><div class="tv" id="ss">0</div><div class="tl">Streak</div></div>
+        <div class="ts"><div class="tv" id="sv">0t</div><div class="tl">Volumen</div></div>
     </div>
 
-    <button id="add-btn">+</button>
-    <div class="tap-hint">Workout antippen fuer Details</div>
+    <button id="fab">+</button>
+    <div class="hint">Workout antippen</div>
 
     <nav id="bottom-nav">
-        <button class="nav-item" data-tab="profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nav-label">Profil</span></button>
-        <button class="nav-item" data-tab="suche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span class="nav-label">Suche</span></button>
-        <button class="nav-item active" data-tab="track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg><span class="nav-label">Track</span></button>
-        <button class="nav-item" data-tab="workout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8"/></svg><span class="nav-label">Workout</span></button>
-        <button class="nav-item" data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="nav-label">Vol. Rechner</span></button>
+        <button class="ni" data-t="p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></button>
+        <button class="ni" data-t="s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span class="nl">Suche</span></button>
+        <button class="ni active" data-t="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg><span class="nl">Track</span></button>
+        <button class="ni" data-t="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8"/></svg><span class="nl">Workout</span></button>
+        <button class="ni" data-t="v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="nl">Vol. Rechner</span></button>
     </nav>
 
-    <!-- Workout Detail -->
-    <div id="workout-detail">
-        <div class="detail-card">
-            <div class="detail-header">
-                <div class="detail-header-left">
-                    <div class="detail-header-icons">
-                        <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
-                        <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-                    </div>
-                    <div>
-                        <div class="detail-title" id="det-title">Workout 1</div>
-                        <div class="detail-date" id="det-date">01.01.2025</div>
-                    </div>
-                </div>
-                <button class="detail-close" id="det-close">&times;</button>
-            </div>
-            <div class="detail-body" id="det-body"></div>
-        </div>
-    </div>
+    <div id="det"><div class="dc">
+        <div class="dh"><div class="dhl"><div class="dhi">
+            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00-.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
+            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div><div><div class="dt" id="d-t">Workout 1</div><div class="dd" id="d-d"></div></div></div>
+        <button class="dx" id="d-x">&times;</button></div>
+        <div class="db" id="d-b"></div>
+    </div></div>
 
-    <!-- Milestone -->
-    <div id="milestone-popup">
-        <div class="ms-card">
-            <h2 id="ms-title"></h2>
-            <p id="ms-text"></p>
-            <button onclick="document.getElementById('milestone-popup').classList.remove('show')">Weiter!</button>
-        </div>
-    </div>
+    <div id="ms"><div class="mc"><h2 id="m-t"></h2><p id="m-p"></p><button onclick="document.getElementById('ms').classList.remove('show')">Weiter!</button></div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-    // ========== EXERCISE DATABASE ==========
-    const EXERCISE_DB = {
-        'BRUST, TRIZEPS': [
-            { name: 'Bankdruecken', muscle: 'Brust', icon: '🏋️', sets: [[60,10],[60,10],[60,10]] },
-            { name: 'Kabelzug-Ueberkreuzen', muscle: 'Brust', icon: '🔗', sets: [[60,10],[60,10],[100,100],[60,10]] },
-            { name: 'Liegestuetze', muscle: 'Brust', icon: '💪', sets: [[30,10],[20,1],[20,10]] },
-            { name: 'Pushdown', muscle: 'Trizeps', icon: '🏗️', sets: [[50,10],[50,10],[50,10]] },
-            { name: 'Trizeps Kickbacks', muscle: 'Trizeps', icon: '🦾', sets: [[50,10],[50,10],[50,10]] },
-        ],
-        'RUECKEN, BIZEPS': [
-            { name: 'Klimmzuege', muscle: 'Ruecken', icon: '🧗', sets: [[0,12],[0,10],[0,8]] },
-            { name: 'Langhantel-Rudern', muscle: 'Ruecken', icon: '🏋️', sets: [[70,10],[70,10],[80,8]] },
-            { name: 'Latzug', muscle: 'Ruecken', icon: '🔗', sets: [[60,12],[65,10],[70,8]] },
-            { name: 'Bizeps Curls', muscle: 'Bizeps', icon: '💪', sets: [[15,12],[15,12],[17,10]] },
-            { name: 'Hammercurls', muscle: 'Bizeps', icon: '🔨', sets: [[14,12],[14,12],[16,10]] },
-        ],
-        'BEINE, SCHULTERN': [
-            { name: 'Kniebeugen', muscle: 'Beine', icon: '🦵', sets: [[80,10],[90,8],[100,6]] },
-            { name: 'Beinpresse', muscle: 'Beine', icon: '🏗️', sets: [[150,12],[170,10],[190,8]] },
-            { name: 'Ausfallschritte', muscle: 'Beine', icon: '🚶', sets: [[20,12],[20,12],[25,10]] },
-            { name: 'Schulterdruecken', muscle: 'Schultern', icon: '🏋️', sets: [[40,10],[40,10],[45,8]] },
-            { name: 'Seitheben', muscle: 'Schultern', icon: '🦅', sets: [[10,15],[12,12],[12,12]] },
-        ],
-        'PUSH DAY': [
-            { name: 'Bankdruecken', muscle: 'Brust', icon: '🏋️', sets: [[70,8],[75,6],[80,5]] },
-            { name: 'Schraegbankdruecken', muscle: 'Brust', icon: '📐', sets: [[50,10],[55,8],[60,8]] },
-            { name: 'Schulterdruecken', muscle: 'Schultern', icon: '🏋️', sets: [[35,10],[40,8],[40,8]] },
-            { name: 'Seitheben', muscle: 'Schultern', icon: '🦅', sets: [[10,15],[12,12],[12,12]] },
-            { name: 'Trizeps Dips', muscle: 'Trizeps', icon: '💪', sets: [[0,12],[0,10],[10,8]] },
-        ],
-        'PULL DAY': [
-            { name: 'Kreuzheben', muscle: 'Ruecken', icon: '🏋️', sets: [[100,8],[110,6],[120,5]] },
-            { name: 'Klimmzuege', muscle: 'Ruecken', icon: '🧗', sets: [[0,10],[0,8],[10,6]] },
-            { name: 'Kabelrudern', muscle: 'Ruecken', icon: '🔗', sets: [[60,12],[65,10],[70,10]] },
-            { name: 'Face Pulls', muscle: 'Schultern', icon: '🎯', sets: [[25,15],[25,15],[30,12]] },
-            { name: 'Bizeps Curls', muscle: 'Bizeps', icon: '💪', sets: [[15,12],[17,10],[17,10]] },
-        ],
-        'LEG DAY': [
-            { name: 'Kniebeugen', muscle: 'Beine', icon: '🦵', sets: [[90,8],[100,6],[110,5]] },
-            { name: 'Rumaenisches Kreuzheben', muscle: 'Beine', icon: '🏋️', sets: [[80,10],[85,8],[90,8]] },
-            { name: 'Beinpresse', muscle: 'Beine', icon: '🏗️', sets: [[160,12],[180,10],[200,8]] },
-            { name: 'Beinbeuger', muscle: 'Beine', icon: '🦿', sets: [[50,12],[55,10],[60,10]] },
-            { name: 'Wadenheben', muscle: 'Waden', icon: '🦶', sets: [[80,15],[90,12],[100,12]] },
-        ],
-        'CARDIO': [
-            { name: 'Laufband', muscle: 'Cardio', icon: '🏃', sets: [[0,30]] },
-            { name: 'Rudergeraet', muscle: 'Cardio', icon: '🚣', sets: [[0,15]] },
-            { name: 'Fahrrad', muscle: 'Cardio', icon: '🚴', sets: [[0,20]] },
-        ],
-        'HIIT': [
-            { name: 'Burpees', muscle: 'Ganzkörper', icon: '⚡', sets: [[0,15],[0,12],[0,10]] },
-            { name: 'Box Jumps', muscle: 'Beine', icon: '📦', sets: [[0,12],[0,12],[0,10]] },
-            { name: 'Battle Ropes', muscle: 'Arme', icon: '🪢', sets: [[0,30],[0,30],[0,30]] },
-            { name: 'Kettlebell Swings', muscle: 'Ganzkörper', icon: '🔔', sets: [[24,15],[24,15],[24,12]] },
-        ],
-        'OBERKOERPER': [
-            { name: 'Bankdruecken', muscle: 'Brust', icon: '🏋️', sets: [[65,10],[70,8],[75,6]] },
-            { name: 'Langhantel-Rudern', muscle: 'Ruecken', icon: '🏋️', sets: [[60,10],[65,8],[70,8]] },
-            { name: 'Schulterdruecken', muscle: 'Schultern', icon: '🏋️', sets: [[35,10],[40,8],[40,8]] },
-            { name: 'Bizeps Curls', muscle: 'Bizeps', icon: '💪', sets: [[14,12],[14,12],[16,10]] },
-            { name: 'Pushdown', muscle: 'Trizeps', icon: '🏗️', sets: [[45,12],[50,10],[50,10]] },
-        ],
-        'GANZKOERPER': [
-            { name: 'Kniebeugen', muscle: 'Beine', icon: '🦵', sets: [[70,10],[80,8],[80,8]] },
-            { name: 'Bankdruecken', muscle: 'Brust', icon: '🏋️', sets: [[60,10],[65,8],[70,8]] },
-            { name: 'Klimmzuege', muscle: 'Ruecken', icon: '🧗', sets: [[0,10],[0,8],[0,6]] },
-            { name: 'Schulterdruecken', muscle: 'Schultern', icon: '🏋️', sets: [[30,10],[35,8],[35,8]] },
-            { name: 'Planke', muscle: 'Core', icon: '🧘', sets: [[0,60],[0,45],[0,45]] },
-        ],
+    // ===== EXERCISES =====
+    const EX={
+        'BRUST, TRIZEPS':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[60,10],[60,10],[60,10]]},{n:'Kabelzug-Ueberkreuzen',m:'Brust',i:'🔗',s:[[60,10],[60,10],[100,10],[60,10]]},{n:'Liegestuetze',m:'Brust',i:'💪',s:[[30,10],[20,1],[20,10]]},{n:'Pushdown',m:'Trizeps',i:'🏗️',s:[[50,10],[50,10],[50,10]]},{n:'Trizeps Kickbacks',m:'Trizeps',i:'🦾',s:[[50,10],[50,10],[50,10]]}],
+        'RUECKEN, BIZEPS':[{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,12],[0,10],[0,8]]},{n:'Langhantel-Rudern',m:'Ruecken',i:'🏋️',s:[[70,10],[70,10],[80,8]]},{n:'Latzug',m:'Ruecken',i:'🔗',s:[[60,12],[65,10],[70,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[15,12],[15,12],[17,10]]},{n:'Hammercurls',m:'Bizeps',i:'🔨',s:[[14,12],[14,12],[16,10]]}],
+        'BEINE, SCHULTERN':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[80,10],[90,8],[100,6]]},{n:'Beinpresse',m:'Beine',i:'🏗️',s:[[150,12],[170,10],[190,8]]},{n:'Ausfallschritte',m:'Beine',i:'🚶',s:[[20,12],[20,12],[25,10]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[40,10],[40,10],[45,8]]},{n:'Seitheben',m:'Schultern',i:'🦅',s:[[10,15],[12,12],[12,12]]}],
+        'PUSH DAY':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[70,8],[75,6],[80,5]]},{n:'Schraegbank',m:'Brust',i:'📐',s:[[50,10],[55,8],[60,8]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[35,10],[40,8],[40,8]]},{n:'Seitheben',m:'Schultern',i:'🦅',s:[[10,15],[12,12]]},{n:'Trizeps Dips',m:'Trizeps',i:'💪',s:[[0,12],[0,10],[10,8]]}],
+        'PULL DAY':[{n:'Kreuzheben',m:'Ruecken',i:'🏋️',s:[[100,8],[110,6],[120,5]]},{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,10],[0,8],[10,6]]},{n:'Kabelrudern',m:'Ruecken',i:'🔗',s:[[60,12],[65,10],[70,10]]},{n:'Face Pulls',m:'Schultern',i:'🎯',s:[[25,15],[25,15],[30,12]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[15,12],[17,10],[17,10]]}],
+        'LEG DAY':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[90,8],[100,6],[110,5]]},{n:'Rum. Kreuzheben',m:'Beine',i:'🏋️',s:[[80,10],[85,8],[90,8]]},{n:'Beinpresse',m:'Beine',i:'🏗️',s:[[160,12],[180,10],[200,8]]},{n:'Beinbeuger',m:'Beine',i:'🦿',s:[[50,12],[55,10],[60,10]]},{n:'Wadenheben',m:'Waden',i:'🦶',s:[[80,15],[90,12],[100,12]]}],
+        'CARDIO':[{n:'Laufband',m:'Cardio',i:'🏃',s:[[0,30]]},{n:'Rudergeraet',m:'Cardio',i:'🚣',s:[[0,15]]},{n:'Fahrrad',m:'Cardio',i:'🚴',s:[[0,20]]}],
+        'HIIT':[{n:'Burpees',m:'Ganzkoerper',i:'⚡',s:[[0,15],[0,12],[0,10]]},{n:'Box Jumps',m:'Beine',i:'📦',s:[[0,12],[0,12],[0,10]]},{n:'Battle Ropes',m:'Arme',i:'🪢',s:[[0,30],[0,30],[0,30]]},{n:'Kettlebell Swings',m:'Ganzkoerper',i:'🔔',s:[[24,15],[24,15],[24,12]]}],
+        'OBERKOERPER':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[65,10],[70,8],[75,6]]},{n:'LH-Rudern',m:'Ruecken',i:'🏋️',s:[[60,10],[65,8],[70,8]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[35,10],[40,8],[40,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[14,12],[14,12],[16,10]]},{n:'Pushdown',m:'Trizeps',i:'🏗️',s:[[45,12],[50,10],[50,10]]}],
+        'GANZKOERPER':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[70,10],[80,8],[80,8]]},{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[60,10],[65,8],[70,8]]},{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,10],[0,8],[0,6]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[30,10],[35,8],[35,8]]},{n:'Planke',m:'Core',i:'🧘',s:[[0,60],[0,45],[0,45]]}]
     };
 
-    // ========== DATA ==========
-    const MILESTONES = [1,5,10,25,50,75,100,150,200,365];
-    const TYPES = Object.keys(EXERCISE_DB);
+    // ===== DATA =====
+    const MS=[1,5,10,25,50,75,100,150,200,365];
+    const TY=Object.keys(EX);
+    let D=JSON.parse(localStorage.getItem('bot4')||'null')||{w:[]};
+    let MR=JSON.parse(localStorage.getItem('bot4m')||'[]');
+    if(!D.w.length){for(let i=14;i>=0;i--)if(Math.random()>.3)D.w.push({d:new Date(Date.now()-i*864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'done',du:40+(Math.random()*50|0)});D.w.push({d:new Date(Date.now()+864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'planned',du:0});MS.forEach(m=>{if(D.w.length>=m)MR.push(m)});sv();}
+    function sv(){localStorage.setItem('bot4',JSON.stringify(D));localStorage.setItem('bot4m',JSON.stringify(MR))}
+    function stk(){let s=0,c=new Date().setHours(0,0,0,0);const ds=[...new Set(D.w.filter(w=>w.s==='done').map(w=>new Date(w.d).setHours(0,0,0,0)))].sort((a,b)=>b-a);for(const d of ds){if(d===c||d===c-864e5){s++;c=d}else if(d<c-864e5)break}return s}
+    function fd(iso){return new Date(iso).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}
+    function vol(){let v=0;D.w.filter(w=>w.s==='done').forEach(w=>{(EX[w.t]||[]).forEach(e=>e.s.forEach(s=>{v+=s[0]*s[1]}))});return(v/1000).toFixed(1)}
 
-    let data = JSON.parse(localStorage.getItem('bot3d2') || 'null') || { workouts: [] };
-    let msReached = JSON.parse(localStorage.getItem('bot3d2ms') || '[]');
+    // ===== THREE.JS =====
+    const ct=document.getElementById('c');
+    const sc=new THREE.Scene();
+    sc.fog=new THREE.FogExp2(0x000510,0.028);
+    const cam=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,120);
+    cam.position.set(0,3.2,6.5);cam.lookAt(0,1.0,-3);
+    const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+    R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,2));
+    R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;
+    ct.appendChild(R.domElement);
 
-    if (data.workouts.length === 0) {
-        for (let i = 14; i >= 0; i--) {
-            if (Math.random() > 0.3) {
-                const d = new Date(Date.now() - i * 86400000);
-                data.workouts.push({
-                    date: d.toISOString(),
-                    type: TYPES[Math.floor(Math.random() * TYPES.length)],
-                    status: 'done',
-                    duration: 40 + Math.floor(Math.random() * 50)
-                });
-            }
-        }
-        data.workouts.push({
-            date: new Date(Date.now() + 86400000).toISOString(),
-            type: TYPES[Math.floor(Math.random() * TYPES.length)],
-            status: 'planned', duration: 0
-        });
-        MILESTONES.forEach(m => { if (data.workouts.length >= m) msReached.push(m); });
-        save();
-    }
+    // === LIGHTS ===
+    // Big blue back glow
+    const bl=new THREE.PointLight(0x0066ff,12,40);bl.position.set(0,10,-22);sc.add(bl);
+    // Side fills
+    const sl=new THREE.PointLight(0x0044cc,5,25);sl.position.set(-5,5,-14);sc.add(sl);
+    const sr2=new THREE.PointLight(0x0088ff,5,25);sr2.position.set(5,5,-14);sc.add(sr2);
+    // Rim from behind
+    const rl=new THREE.SpotLight(0x0077ff,6,20,Math.PI/3,0.5);
+    rl.position.set(0,7,-6);rl.target.position.set(0,1,1);sc.add(rl);sc.add(rl.target);
+    // Subtle ambient
+    sc.add(new THREE.AmbientLight(0x001122,0.4));
+    // Floor glow
+    const fl=new THREE.PointLight(0x002266,4,12);fl.position.set(0,0.05,-1.5);sc.add(fl);
 
-    function save() {
-        localStorage.setItem('bot3d2', JSON.stringify(data));
-        localStorage.setItem('bot3d2ms', JSON.stringify(msReached));
-    }
-
-    function streak() {
-        let s = 0, check = new Date().setHours(0,0,0,0);
-        const dates = [...new Set(data.workouts.filter(w=>w.status==='done').map(w=>new Date(w.date).setHours(0,0,0,0)))].sort((a,b)=>b-a);
-        for (const d of dates) {
-            if (d===check||d===check-864e5){s++;check=d;} else if(d<check-864e5) break;
-        }
-        return s;
-    }
-
-    function fmtDate(iso) { return new Date(iso).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-
-    function totalVolume() {
-        let vol = 0;
-        data.workouts.filter(w=>w.status==='done').forEach(w => {
-            const ex = EXERCISE_DB[w.type] || [];
-            ex.forEach(e => e.sets.forEach(s => { vol += s[0] * s[1]; }));
-        });
-        return (vol / 1000).toFixed(1);
-    }
-
-    // ========== THREE.JS ==========
-    const container = document.getElementById('scene-container');
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000510, 0.032);
-
-    const cam = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 100);
-    cam.position.set(0, 3.0, 6);
-    cam.lookAt(0, 1.0, -2);
-
-    const R = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    R.setSize(innerWidth, innerHeight);
-    R.setPixelRatio(Math.min(devicePixelRatio, 2));
-    R.toneMapping = THREE.ACESFilmicToneMapping;
-    R.toneMappingExposure = 1.1;
-    container.appendChild(R.domElement);
-
-    // Lights
-    const L1 = new THREE.PointLight(0x0066ff, 10, 35); L1.position.set(0, 8, -18); scene.add(L1);
-    const L2 = new THREE.PointLight(0x0044cc, 4, 20); L2.position.set(-4, 4, -12); scene.add(L2);
-    const L3 = new THREE.PointLight(0x0088ff, 4, 20); L3.position.set(4, 4, -12); scene.add(L3);
-    const L4 = new THREE.SpotLight(0x0077ff, 4, 18, Math.PI/3.5, 0.6);
-    L4.position.set(0, 6, -4); L4.target.position.set(0, 0, -2); scene.add(L4); scene.add(L4.target);
-    scene.add(new THREE.AmbientLight(0x001122, 0.6));
-    const glowL = new THREE.PointLight(0x002266, 3, 10); glowL.position.set(0, 0.05, -1); scene.add(glowL);
-
-    // Ground
-    const gnd = new THREE.Mesh(
-        new THREE.PlaneGeometry(50, 80),
-        new THREE.MeshPhongMaterial({ color: 0x000a18, specular: 0x002244, shininess: 100, transparent: true, opacity: 0.95 })
-    );
-    gnd.rotation.x = -Math.PI/2; gnd.position.y = -0.02; scene.add(gnd);
-
-    // Grid
-    const grid = new THREE.GridHelper(50, 100, 0x001a44, 0x000c1a);
-    grid.position.y = 0.005; scene.add(grid);
-
-    // ========== PREMIUM HUMAN FIGURE ==========
-    const fig = new THREE.Group();
-    const FM = new THREE.MeshPhongMaterial({
-        color: 0x030810, specular: 0x0044aa, shininess: 40, emissive: 0x000308
+    // === BACKGROUND GRADIENT ===
+    // Blue gradient sphere
+    const bgGeo=new THREE.SphereGeometry(50,32,32);
+    const bgMat=new THREE.ShaderMaterial({
+        side:THREE.BackSide,
+        uniforms:{},
+        vertexShader:`varying vec3 vPos;void main(){vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+        fragmentShader:`varying vec3 vPos;void main(){float d=length(vPos.xz)/50.0;float y=(vPos.y+50.0)/100.0;vec3 dark=vec3(0.0,0.01,0.04);vec3 blue=vec3(0.0,0.15,0.45);float f=smoothstep(0.0,0.6,y)*smoothstep(0.8,0.0,d);gl_FragColor=vec4(mix(dark,blue,f*0.7),1.0);}`
     });
+    sc.add(new THREE.Mesh(bgGeo,bgMat));
 
-    function addPart(geo, x, y, z, rx, ry, rz, sx, sy, sz) {
-        const m = new THREE.Mesh(geo, FM);
-        m.position.set(x, y, z);
-        if (rx||ry||rz) m.rotation.set(rx||0, ry||0, rz||0);
-        if (sx) m.scale.set(sx, sy||sx, sz||sx);
-        fig.add(m);
-        return m;
-    }
+    // === GROUND ===
+    const gnd=new THREE.Mesh(new THREE.PlaneGeometry(60,100),new THREE.MeshPhongMaterial({color:0x000a18,specular:0x002244,shininess:120,transparent:true,opacity:0.95}));
+    gnd.rotation.x=-Math.PI/2;gnd.position.y=-0.02;sc.add(gnd);
+    // Grid
+    const gr=new THREE.GridHelper(60,120,0x001a44,0x000c1a);gr.position.y=0.005;sc.add(gr);
 
-    // Torso upper
-    addPart(new THREE.CylinderGeometry(0.28, 0.34, 0.55, 12), 0, 1.55, 0);
-    // Torso lower
-    addPart(new THREE.CylinderGeometry(0.34, 0.32, 0.55, 12), 0, 1.05, 0);
-    // Hips
-    addPart(new THREE.SphereGeometry(0.32, 10, 10, 0, Math.PI*2, 0, Math.PI*0.5), 0, 0.82, 0);
-    // Chest
-    addPart(new THREE.SphereGeometry(0.3, 10, 10), 0, 1.45, 0.05);
+    // Bright floor edge line (like in screenshot)
+    const edgeGeo=new THREE.PlaneGeometry(8,0.04);
+    const edgeMat=new THREE.MeshBasicMaterial({color:0x00aaff,transparent:true,opacity:0.6});
+    const edge=new THREE.Mesh(edgeGeo,edgeMat);
+    edge.rotation.x=-Math.PI/2;edge.position.set(0,0.03,3.5);sc.add(edge);
+
+    // ===== 3D HUMAN FIGURE (Smooth LatheGeometry) =====
+    const fig=new THREE.Group();
+    const FM=new THREE.MeshPhongMaterial({color:0x020610,specular:0x0055cc,shininess:50,emissive:0x000204});
+    // Rim light material (edge glow)
+    const RM=new THREE.MeshPhongMaterial({color:0x010308,specular:0x0088ff,shininess:80,emissive:0x000105,transparent:true,opacity:0.95});
+
+    // Body profile using LatheGeometry for smooth torso
+    const bodyProfile=[
+        new THREE.Vector2(0.00, 0.00),  // bottom center
+        new THREE.Vector2(0.12, 0.00),  // hip center
+        new THREE.Vector2(0.28, 0.05),  // hip wide
+        new THREE.Vector2(0.30, 0.20),  // lower belly
+        new THREE.Vector2(0.28, 0.40),  // waist
+        new THREE.Vector2(0.26, 0.55),  // natural waist
+        new THREE.Vector2(0.30, 0.70),  // ribs
+        new THREE.Vector2(0.34, 0.85),  // chest
+        new THREE.Vector2(0.32, 0.95),  // upper chest
+        new THREE.Vector2(0.28, 1.05),  // shoulders base
+        new THREE.Vector2(0.18, 1.10),  // neck base
+        new THREE.Vector2(0.14, 1.18),  // neck
+        new THREE.Vector2(0.12, 1.25),  // neck top
+        new THREE.Vector2(0.00, 1.25),  // neck center top
+    ];
+    const bodyLathe=new THREE.LatheGeometry(bodyProfile, 24);
+    const bodyMesh=new THREE.Mesh(bodyLathe, FM);
+    bodyMesh.position.y=0.55;
+    fig.add(bodyMesh);
+
     // Head
-    addPart(new THREE.SphereGeometry(0.22, 14, 14), 0, 2.08, 0, 0, 0, 0, 1, 1.08, 1);
-    // Hood
-    addPart(new THREE.SphereGeometry(0.29, 14, 10, 0, Math.PI*2, 0, Math.PI*0.55), 0, 2.12, -0.03, 0, 0, 0, 1.05, 1.15, 1.25);
-    // Hood rim
-    addPart(new THREE.TorusGeometry(0.26, 0.03, 8, 20, Math.PI), 0, 2.0, 0.12, -0.3, 0, 0);
-    // Neck
-    addPart(new THREE.CylinderGeometry(0.12, 0.15, 0.18, 8), 0, 1.88, 0);
-    // Shoulders
-    addPart(new THREE.SphereGeometry(0.15, 10, 10), -0.42, 1.72, 0);
-    addPart(new THREE.SphereGeometry(0.15, 10, 10), 0.42, 1.72, 0);
-    // Upper arms
-    addPart(new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8), -0.46, 1.42, 0, 0, 0, 0.1);
-    addPart(new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8), 0.46, 1.42, 0, 0, 0, -0.1);
-    // Forearms
-    addPart(new THREE.CylinderGeometry(0.07, 0.08, 0.45, 8), -0.48, 1.0, 0.04, 0, 0, 0.04);
-    addPart(new THREE.CylinderGeometry(0.07, 0.08, 0.45, 8), 0.48, 1.0, 0.04, 0, 0, -0.04);
-    // Hands
-    addPart(new THREE.SphereGeometry(0.06, 8, 8), -0.49, 0.76, 0.06);
-    addPart(new THREE.SphereGeometry(0.06, 8, 8), 0.49, 0.76, 0.06);
-    // Upper legs
-    addPart(new THREE.CylinderGeometry(0.13, 0.11, 0.55, 8), -0.17, 0.52, 0);
-    addPart(new THREE.CylinderGeometry(0.13, 0.11, 0.55, 8), 0.17, 0.52, 0);
-    // Lower legs
-    addPart(new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8), -0.17, 0.05, 0.02);
-    addPart(new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8), 0.17, 0.05, 0.02);
-    // Feet
-    addPart(new THREE.BoxGeometry(0.12, 0.06, 0.26), -0.17, -0.18, 0.05);
-    addPart(new THREE.BoxGeometry(0.12, 0.06, 0.26), 0.17, -0.18, 0.05);
+    const headGeo=new THREE.SphereGeometry(0.22, 16, 16);
+    const headMesh=new THREE.Mesh(headGeo, FM);
+    headMesh.position.set(0, 2.02, 0);
+    headMesh.scale.set(1, 1.1, 0.95);
+    fig.add(headMesh);
 
-    fig.position.set(0, 0, 0.5);
-    scene.add(fig);
+    // Hood - larger sphere covering head
+    const hoodGeo=new THREE.SphereGeometry(0.30, 16, 12, 0, Math.PI*2, 0, Math.PI*0.6);
+    const hoodMesh=new THREE.Mesh(hoodGeo, FM);
+    hoodMesh.position.set(0, 2.06, -0.04);
+    hoodMesh.scale.set(1.1, 1.2, 1.3);
+    fig.add(hoodMesh);
 
-    // ========== PANELS ==========
-    let panels = []; // { mesh, glowMesh, refMesh, workoutIdx }
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
+    // Hood front rim
+    const rimGeo=new THREE.TorusGeometry(0.27, 0.025, 8, 24, Math.PI*1.1);
+    const rimMesh=new THREE.Mesh(rimGeo, RM);
+    rimMesh.position.set(0, 1.95, 0.12);
+    rimMesh.rotation.x=-0.35;
+    rimMesh.rotation.y=Math.PI*-0.05;
+    fig.add(rimMesh);
 
-    function makeTextCanvas(text1, text2, text3, isCurrent) {
-        const c = document.createElement('canvas'); c.width = 512; c.height = 160;
-        const x = c.getContext('2d');
-        x.fillStyle = 'rgba(0,8,24,0.65)'; x.fillRect(0,0,512,160);
+    // Arms - smooth with LatheGeometry
+    function makeArm(side) {
+        const armGroup=new THREE.Group();
+        // Upper arm
+        const ua=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.1,0.52,10), FM);
+        ua.position.y=-0.26;
+        armGroup.add(ua);
+        // Elbow
+        const elbow=new THREE.Mesh(new THREE.SphereGeometry(0.085,8,8), FM);
+        elbow.position.y=-0.52;
+        armGroup.add(elbow);
+        // Forearm
+        const fa=new THREE.Mesh(new THREE.CylinderGeometry(0.065,0.08,0.48,10), FM);
+        fa.position.set(0,-0.76,0.04);
+        armGroup.add(fa);
+        // Hand
+        const hand=new THREE.Mesh(new THREE.SphereGeometry(0.055,8,8), FM);
+        hand.position.set(0,-1.0,0.06);
+        hand.scale.set(0.9,1.1,0.7);
+        armGroup.add(hand);
 
-        const bc = isCurrent ? 'rgba(0,150,255,0.55)' : 'rgba(0,80,200,0.25)';
-        x.strokeStyle = bc; x.lineWidth = 2; x.strokeRect(2,2,508,156);
+        armGroup.position.set(side*0.40, 1.68, 0);
+        armGroup.rotation.z=side*0.08;
+        return armGroup;
+    }
+    fig.add(makeArm(-1));
+    fig.add(makeArm(1));
 
-        // Corners
-        x.strokeStyle = isCurrent ? 'rgba(0,180,255,0.9)' : 'rgba(0,100,255,0.4)';
-        x.lineWidth = 3;
-        const L = 22;
+    // Legs
+    function makeLeg(side) {
+        const legGroup=new THREE.Group();
+        // Upper leg
+        const ul=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.12,0.58,10), FM);
+        ul.position.y=-0.29;
+        legGroup.add(ul);
+        // Knee
+        const knee=new THREE.Mesh(new THREE.SphereGeometry(0.095,8,8), FM);
+        knee.position.y=-0.58;
+        legGroup.add(knee);
+        // Lower leg
+        const ll=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.52,10), FM);
+        ll.position.y=-0.84;
+        legGroup.add(ll);
+        // Foot
+        const foot=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.07,0.28), FM);
+        foot.position.set(0,-1.12,0.05);
+        legGroup.add(foot);
+
+        legGroup.position.set(side*0.16, 0.57, 0);
+        legGroup.rotation.z=side*0.02;
+        return legGroup;
+    }
+    fig.add(makeLeg(-1));
+    fig.add(makeLeg(1));
+
+    // Shoulder caps
+    const shGeo=new THREE.SphereGeometry(0.14,10,10);
+    const lsh=new THREE.Mesh(shGeo,FM);lsh.position.set(-0.40,1.68,0);fig.add(lsh);
+    const rsh=new THREE.Mesh(shGeo,FM);rsh.position.set(0.40,1.68,0);fig.add(rsh);
+
+    fig.position.set(0,-0.55,0.3);
+    sc.add(fig);
+
+    // Shadow under figure
+    const shadowGeo=new THREE.CircleGeometry(0.8,32);
+    const shadowMat=new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0.4});
+    const shadow=new THREE.Mesh(shadowGeo,shadowMat);
+    shadow.rotation.x=-Math.PI/2;shadow.position.set(0,0.01,0.3);sc.add(shadow);
+
+    // ===== PANELS =====
+    let panels=[];
+    const ray=new THREE.Raycaster();
+    const mpos=new THREE.Vector2();
+
+    function mkTex(t1,t2,t3,cur){
+        const c=document.createElement('canvas');c.width=512;c.height=160;
+        const x=c.getContext('2d');
+        x.fillStyle='rgba(0,8,24,0.6)';x.fillRect(0,0,512,160);
+        const bc=cur?'rgba(0,150,255,0.5)':'rgba(0,80,200,0.2)';
+        x.strokeStyle=bc;x.lineWidth=2;x.strokeRect(2,2,508,156);
+        x.strokeStyle=cur?'rgba(0,180,255,0.9)':'rgba(0,100,255,0.35)';x.lineWidth=3;
+        const L=22;
         x.beginPath();x.moveTo(2,L);x.lineTo(2,2);x.lineTo(L,2);x.stroke();
         x.beginPath();x.moveTo(510-L,2);x.lineTo(510,2);x.lineTo(510,L);x.stroke();
         x.beginPath();x.moveTo(2,158-L);x.lineTo(2,158);x.lineTo(L,158);x.stroke();
         x.beginPath();x.moveTo(510-L,158);x.lineTo(510,158);x.lineTo(510,158-L);x.stroke();
-
-        x.textAlign = 'center';
-        x.font = 'bold 34px Inter, sans-serif';
-        x.fillStyle = isCurrent ? '#fff' : 'rgba(255,255,255,0.65)';
-        x.fillText(text1, 256, 52);
-
-        x.font = '300 17px Inter, sans-serif';
-        x.fillStyle = isCurrent ? 'rgba(0,200,255,0.85)' : 'rgba(255,255,255,0.3)';
-        x.fillText(text2, 256, 86);
-
-        x.font = '600 26px Inter, sans-serif';
-        x.fillStyle = isCurrent ? 'rgba(0,210,255,0.95)' : 'rgba(0,130,255,0.55)';
-        x.fillText(text3, 256, 128);
-
+        x.textAlign='center';
+        x.font='bold 34px Inter,sans-serif';x.fillStyle=cur?'#fff':'rgba(255,255,255,0.6)';x.fillText(t1,256,52);
+        x.font='300 17px Inter,sans-serif';x.fillStyle=cur?'rgba(0,200,255,0.8)':'rgba(255,255,255,0.28)';x.fillText(t2,256,86);
+        x.font='600 26px Inter,sans-serif';x.fillStyle=cur?'rgba(0,210,255,0.9)':'rgba(0,130,255,0.5)';x.fillText(t3,256,128);
         return c;
     }
 
-    function buildPanels() {
-        panels.forEach(p => { scene.remove(p.mesh); if(p.glow) scene.remove(p.glow); if(p.ref) scene.remove(p.ref); });
-        panels = [];
-
-        const wk = [...data.workouts].reverse();
-        wk.forEach((w, i) => {
-            const cur = i === 0;
-            const tex = new THREE.CanvasTexture(makeTextCanvas(
-                w.type, w.status === 'planned' ? 'Workout geplant' : 'Workout abgeschlossen', fmtDate(w.date), cur
-            ));
-            tex.minFilter = THREE.LinearFilter;
-
-            const geo = new THREE.PlaneGeometry(3.4, 1.05);
-            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: cur ? 1 : Math.max(0.12, 0.85 - i*0.07), side: THREE.DoubleSide });
-            const mesh = new THREE.Mesh(geo, mat);
-            const z = -1.8 - i * 1.9;
-            mesh.position.set(0, 0.025, z);
-            mesh.rotation.x = -Math.PI / 2;
-            mesh.userData = { workoutIdx: data.workouts.length - 1 - i };
-            scene.add(mesh);
-
-            let glow = null, ref = null;
-            if (i < 5) {
-                const gm = new THREE.MeshBasicMaterial({ color: cur ? 0x0088ff : 0x002255, transparent: true, opacity: cur ? 0.22 : 0.06, side: THREE.DoubleSide });
-                glow = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.2), gm);
-                glow.position.set(0, 0.015, z); glow.rotation.x = -Math.PI/2;
-                scene.add(glow);
-
-                const rm = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: Math.max(0.02, 0.1-i*0.02), side: THREE.DoubleSide });
-                ref = new THREE.Mesh(geo.clone(), rm);
-                ref.position.set(0, -0.035, z); ref.rotation.x = Math.PI/2;
-                scene.add(ref);
+    function buildP(){
+        panels.forEach(p=>{sc.remove(p.mesh);if(p.glow)sc.remove(p.glow);if(p.ref)sc.remove(p.ref)});panels=[];
+        const wk=[...D.w].reverse();
+        wk.forEach((w,i)=>{
+            const cur=i===0;
+            const tex=new THREE.CanvasTexture(mkTex(w.t,w.s==='planned'?'Workout geplant':'Workout abgeschlossen',fd(w.d),cur));
+            tex.minFilter=THREE.LinearFilter;
+            const geo=new THREE.PlaneGeometry(3.4,1.05);
+            const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:cur?1:Math.max(0.1,0.85-i*0.065),side:THREE.DoubleSide});
+            const mesh=new THREE.Mesh(geo,mat);
+            const z=-1.8-i*1.9;
+            mesh.position.set(0,0.025,z);mesh.rotation.x=-Math.PI/2;
+            mesh.userData={idx:D.w.length-1-i};
+            sc.add(mesh);
+            let glow=null,ref=null;
+            if(i<6){
+                const gm=new THREE.MeshBasicMaterial({color:cur?0x0088ff:0x002255,transparent:true,opacity:cur?0.2:0.05,side:THREE.DoubleSide});
+                glow=new THREE.Mesh(new THREE.PlaneGeometry(3.6,1.2),gm);glow.position.set(0,0.015,z);glow.rotation.x=-Math.PI/2;sc.add(glow);
+                const rm=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:Math.max(0.02,0.1-i*0.018),side:THREE.DoubleSide});
+                ref=new THREE.Mesh(geo.clone(),rm);ref.position.set(0,-0.035,z);ref.rotation.x=Math.PI/2;sc.add(ref);
             }
-
-            panels.push({ mesh, glow, ref, z });
+            panels.push({mesh,glow,ref,z});
         });
     }
-    buildPanels();
+    buildP();
 
     // Particles
-    const PC = 120;
-    const pGeo = new THREE.BufferGeometry();
-    const pPos = new Float32Array(PC * 3);
-    for (let i = 0; i < PC; i++) {
-        pPos[i*3] = (Math.random()-0.5)*25;
-        pPos[i*3+1] = Math.random()*10;
-        pPos[i*3+2] = (Math.random()-0.5)*40-5;
-    }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    const pMat = new THREE.PointsMaterial({ color: 0x0066cc, size: 0.05, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
-    scene.add(new THREE.Points(pGeo, pMat));
+    const PC=150;const pG=new THREE.BufferGeometry();const pP=new Float32Array(PC*3);
+    for(let i=0;i<PC;i++){pP[i*3]=(Math.random()-.5)*30;pP[i*3+1]=Math.random()*12;pP[i*3+2]=(Math.random()-.5)*50-5;}
+    pG.setAttribute('position',new THREE.BufferAttribute(pP,3));
+    sc.add(new THREE.Points(pG,new THREE.PointsMaterial({color:0x0055aa,size:0.04,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false})));
 
-    // Light rays
-    for (let i = 0; i < 6; i++) {
-        const rm = new THREE.MeshBasicMaterial({ color: 0x0055cc, transparent: true, opacity: 0.025+Math.random()*0.03, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false });
-        const ray = new THREE.Mesh(new THREE.PlaneGeometry(0.2+Math.random()*0.6, 18), rm);
-        ray.position.set((Math.random()-0.5)*8, 5, -14+Math.random()*5);
-        ray.rotation.z = (Math.random()-0.5)*0.4;
-        scene.add(ray);
+    // Volumetric light rays
+    for(let i=0;i<8;i++){
+        const rm=new THREE.MeshBasicMaterial({color:0x0055cc,transparent:true,opacity:0.02+Math.random()*0.025,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,depthWrite:false});
+        const r=new THREE.Mesh(new THREE.PlaneGeometry(0.15+Math.random()*0.5,20),rm);
+        r.position.set((Math.random()-.5)*8,6,-16+Math.random()*6);r.rotation.z=(Math.random()-.5)*0.4;sc.add(r);
     }
 
-    // ========== INTERACTION ==========
-    let scrollY = 0, targetScroll = 0, dragOn = false, dragY = 0, vel = 0;
-    let didDrag = false, pointerDownTime = 0, pointerDownPos = {x:0,y:0};
+    // ===== INPUT =====
+    let sY=0,tS=0,drag=false,dY=0,vel=0,pdt=0,pdp={x:0,y:0};
+    R.domElement.addEventListener('pointerdown',e=>{drag=true;dY=e.clientY;vel=0;pdt=Date.now();pdp={x:e.clientX,y:e.clientY}});
+    R.domElement.addEventListener('pointermove',e=>{if(!drag)return;const dy=e.clientY-dY;tS-=dy*0.013;vel=-dy*0.013;dY=e.clientY});
+    R.domElement.addEventListener('pointerup',e=>{drag=false;if(Date.now()-pdt<300&&Math.hypot(e.clientX-pdp.x,e.clientY-pdp.y)<15)tap(e.clientX,e.clientY)});
+    R.domElement.addEventListener('wheel',e=>{e.preventDefault();tS+=e.deltaY*0.006},{passive:false});
 
-    R.domElement.addEventListener('pointerdown', e => {
-        dragOn = true; dragY = e.clientY; vel = 0; didDrag = false;
-        pointerDownTime = Date.now();
-        pointerDownPos = {x: e.clientX, y: e.clientY};
-    });
-    R.domElement.addEventListener('pointermove', e => {
-        if (!dragOn) return;
-        const dy = e.clientY - dragY;
-        if (Math.abs(dy) > 5) didDrag = true;
-        targetScroll -= dy * 0.013;
-        vel = -dy * 0.013;
-        dragY = e.clientY;
-    });
-    R.domElement.addEventListener('pointerup', e => {
-        dragOn = false;
-        // Click detection (short tap, no drag)
-        const dt = Date.now() - pointerDownTime;
-        const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
-        if (dt < 300 && dist < 15) {
-            handleTap(e.clientX, e.clientY);
-        }
-    });
-    R.domElement.addEventListener('wheel', e => { e.preventDefault(); targetScroll += e.deltaY * 0.006; }, {passive:false});
-
-    function handleTap(sx, sy) {
-        mouse.x = (sx / innerWidth) * 2 - 1;
-        mouse.y = -(sy / innerHeight) * 2 + 1;
-        raycaster.setFromCamera(mouse, cam);
-        const hits = raycaster.intersectObjects(panels.map(p => p.mesh));
-        if (hits.length > 0) {
-            const idx = hits[0].object.userData.workoutIdx;
-            openDetail(idx);
-        }
+    function tap(sx,sy){
+        mpos.x=(sx/innerWidth)*2-1;mpos.y=-(sy/innerHeight)*2+1;
+        ray.setFromCamera(mpos,cam);
+        const h=ray.intersectObjects(panels.map(p=>p.mesh));
+        if(h.length>0)openDet(h[0].object.userData.idx);
     }
 
-    // ========== DETAIL POPUP ==========
-    function openDetail(idx) {
-        const w = data.workouts[idx];
-        if (!w) return;
-        const num = idx + 1;
-        document.getElementById('det-title').textContent = 'Workout ' + num;
-        document.getElementById('det-date').textContent = fmtDate(w.date);
-
-        const exercises = EXERCISE_DB[w.type] || [];
-        const body = document.getElementById('det-body');
-        body.innerHTML = '';
-
-        exercises.forEach(ex => {
-            const div = document.createElement('div');
-            div.className = 'exercise';
-            div.innerHTML = `
-                <div class="exercise-top">
-                    <div class="exercise-icon">${ex.icon}</div>
-                    <div class="exercise-info">
-                        <div class="exercise-name">${ex.name}</div>
-                        <div class="exercise-muscle">${ex.muscle}</div>
-                    </div>
-                </div>
-                <div class="sets-row">
-                    ${ex.sets.map(s => `<div class="set-pill"><span class="set-kg">${s[0]} kg</span><span class="set-reps">${s[1]}x</span></div>`).join('')}
-                </div>
-            `;
-            body.appendChild(div);
+    // ===== DETAIL =====
+    function openDet(idx){
+        const w=D.w[idx];if(!w)return;
+        document.getElementById('d-t').textContent='Workout '+(idx+1);
+        document.getElementById('d-d').textContent=fd(w.d);
+        const b=document.getElementById('d-b');b.innerHTML='';
+        (EX[w.t]||[]).forEach(e=>{
+            const d=document.createElement('div');d.className='ex';
+            d.innerHTML=`<div class="et"><div class="ei">${e.i}</div><div><div class="en">${e.n}</div><div class="em">${e.m}</div></div></div><div class="sr">${e.s.map(s=>`<div class="sp"><span class="sk">${s[0]} kg</span><span class="sx">${s[1]}x</span></div>`).join('')}</div>`;
+            b.appendChild(d);
         });
-
-        document.getElementById('workout-detail').classList.add('show');
+        document.getElementById('det').classList.add('show');
     }
+    document.getElementById('d-x').addEventListener('click',()=>document.getElementById('det').classList.remove('show'));
+    document.getElementById('det').addEventListener('click',e=>{if(e.target.id==='det')document.getElementById('det').classList.remove('show')});
 
-    document.getElementById('det-close').addEventListener('click', () => {
-        document.getElementById('workout-detail').classList.remove('show');
-    });
-    document.getElementById('workout-detail').addEventListener('click', e => {
-        if (e.target === document.getElementById('workout-detail'))
-            document.getElementById('workout-detail').classList.remove('show');
-    });
-
-    // ========== UI ==========
-    function updateUI() {
-        const done = data.workouts.filter(w=>w.status==='done').length;
-        document.getElementById('s-workouts').textContent = done;
-        document.getElementById('s-streak').textContent = streak();
-        document.getElementById('s-volume').textContent = totalVolume() + 't';
+    // ===== UI =====
+    function upUI(){
+        const dn=D.w.filter(w=>w.s==='done').length;
+        document.getElementById('sw').textContent=dn;
+        document.getElementById('ss').textContent=stk();
+        document.getElementById('sv').textContent=vol()+'t';
     }
-    updateUI();
+    upUI();
 
-    document.querySelectorAll('.nav-item').forEach(b => {
-        b.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-        });
+    document.querySelectorAll('.ni').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
+
+    document.getElementById('fab').addEventListener('click',()=>{
+        D.w.push({d:new Date().toISOString(),t:TY[Math.random()*TY.length|0],s:'done',du:40+(Math.random()*50|0)});
+        sv();buildP();upUI();
+        document.querySelector('.hint').style.display='none';
+        const cnt=D.w.filter(w=>w.s==='done').length;
+        MS.forEach(m=>{if(cnt===m&&!MR.includes(m)){MR.push(m);sv();setTimeout(()=>{document.getElementById('m-t').textContent=m+' Workouts!';document.getElementById('m-p').textContent=({1:'Erster Schritt!',5:'Fuenf geschafft!',10:'Zweistellig!',25:'Viertel-Hundert!',50:'Halbzeit!',75:'Drei Viertel!',100:'HUNDERT!',150:'Wahnsinn!',200:'Zweihundert!',365:'LEGENDE!'})[m]||'!';document.getElementById('ms').classList.add('show');const cs=['#0088ff','#00aaff','#0055cc','#00ddff','#fff'];for(let i=0;i<50;i++){const el=document.createElement('div');el.className='cf';el.style.left=Math.random()*100+'vw';el.style.width=(5+Math.random()*8)+'px';el.style.height=(5+Math.random()*8)+'px';el.style.background=cs[Math.random()*cs.length|0];el.style.borderRadius=Math.random()>.5?'50%':'1px';el.style.animationDelay=Math.random()*1.5+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}},400)}});
     });
 
-    document.getElementById('add-btn').addEventListener('click', () => {
-        data.workouts.push({
-            date: new Date().toISOString(),
-            type: TYPES[Math.floor(Math.random()*TYPES.length)],
-            status: 'done',
-            duration: 40+Math.floor(Math.random()*50)
-        });
-        save(); buildPanels(); updateUI();
-        document.querySelector('.tap-hint').style.display = 'none';
+    // ===== RENDER =====
+    const clk=new THREE.Clock();
+    let ready=false;
 
-        const cnt = data.workouts.filter(w=>w.status==='done').length;
-        MILESTONES.forEach(m => {
-            if (cnt===m && !msReached.includes(m)) {
-                msReached.push(m); save();
-                setTimeout(() => {
-                    document.getElementById('ms-title').textContent = m+' Workouts!';
-                    document.getElementById('ms-text').textContent = ({1:'Erster Schritt!',5:'Fuenf geschafft!',10:'Zweistellig!',25:'Viertel-Hundert!',50:'Halbzeit!',75:'Drei Viertel!',100:'HUNDERT!',150:'Wahnsinn!',200:'Zweihundert!',365:'LEGENDE!'})[m]||'Meilenstein!';
-                    document.getElementById('milestone-popup').classList.add('show');
-                    const cols=['#0088ff','#00aaff','#0055cc','#00ddff','#fff','#0066ff'];
-                    for(let i=0;i<50;i++){const el=document.createElement('div');el.className='confetti';el.style.left=Math.random()*100+'vw';el.style.width=(5+Math.random()*8)+'px';el.style.height=(5+Math.random()*8)+'px';el.style.background=cols[Math.floor(Math.random()*cols.length)];el.style.borderRadius=Math.random()>0.5?'50%':'1px';el.style.animationDelay=Math.random()*1.5+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),5000);}
-                }, 400);
-            }
-        });
-    });
-
-    // ========== RENDER LOOP ==========
-    const clk = new THREE.Clock();
-    function animate() {
+    function animate(){
         requestAnimationFrame(animate);
-        const t = clk.getElapsedTime();
+        const t=clk.getElapsedTime();
 
-        if (!dragOn) { vel *= 0.91; targetScroll += vel; }
-        const maxS = Math.max(0, (data.workouts.length-2)*1.9);
-        targetScroll = Math.max(-1.5, Math.min(maxS+3, targetScroll));
-        scrollY += (targetScroll - scrollY) * 0.09;
+        if(!ready&&t>0.5){ready=true;document.getElementById('loader').classList.add('done')}
 
-        panels.forEach((p, i) => {
-            const z = p.z + scrollY;
-            p.mesh.position.z = z;
-            if (p.glow) p.glow.position.z = z;
-            if (p.ref) p.ref.position.z = z;
-        });
+        if(!drag){vel*=0.91;tS+=vel}
+        const mx=Math.max(0,(D.w.length-2)*1.9);
+        tS=Math.max(-1.5,Math.min(mx+3,tS));
+        sY+=(tS-sY)*0.09;
 
-        // Figure breathing
-        fig.position.y = Math.sin(t * 1.3) * 0.012;
+        panels.forEach(p=>{const z=p.z+sY;p.mesh.position.z=z;if(p.glow)p.glow.position.z=z;if(p.ref)p.ref.position.z=z});
+
+        // Figure breathing + subtle sway
+        fig.position.y=-0.55+Math.sin(t*1.3)*0.01;
+        fig.rotation.y=Math.sin(t*0.4)*0.015;
 
         // Light pulse
-        L1.intensity = 10 + Math.sin(t * 0.7) * 2;
-        glowL.intensity = 3 + Math.sin(t * 1.1) * 0.8;
+        bl.intensity=12+Math.sin(t*0.7)*2.5;
+        fl.intensity=4+Math.sin(t*1.1)*1;
 
         // First panel glow pulse
-        if (panels[0] && panels[0].glow) {
-            panels[0].glow.material.opacity = 0.18 + Math.sin(t * 2.2) * 0.07;
-        }
+        if(panels[0]&&panels[0].glow)panels[0].glow.material.opacity=0.18+Math.sin(t*2.2)*0.06;
+
+        // Edge glow pulse
+        edge.material.opacity=0.5+Math.sin(t*1.5)*0.15;
 
         // Particles
-        const pp = pGeo.attributes.position.array;
-        for (let i = 0; i < PC; i++) {
-            pp[i*3+1] += Math.sin(t + i) * 0.0015;
-            pp[i*3] += Math.cos(t*0.4 + i*0.3) * 0.0008;
-        }
-        pGeo.attributes.position.needsUpdate = true;
+        const pp=pG.attributes.position.array;
+        for(let i=0;i<PC;i++){pp[i*3+1]+=Math.sin(t+i)*0.001;pp[i*3]+=Math.cos(t*0.3+i*0.3)*0.0006}
+        pG.attributes.position.needsUpdate=true;
 
-        R.render(scene, cam);
+        R.render(sc,cam);
     }
     animate();
 
-    window.addEventListener('resize', () => {
-        cam.aspect = innerWidth/innerHeight;
-        cam.updateProjectionMatrix();
-        R.setSize(innerWidth, innerHeight);
-    });
+    window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
     </script>
 </body>
 </html>
