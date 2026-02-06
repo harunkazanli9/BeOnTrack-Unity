@@ -5,741 +5,833 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#141828">
+    <meta name="theme-color" content="#000000">
     <title>BeOnTrack - Deine Fitness Journey</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         body {
-            background: #141828;
+            background: #000;
             overflow: hidden;
             touch-action: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-user-select: none;
             user-select: none;
+            color: #fff;
         }
-        canvas {
-            display: block;
+        #scene-container {
+            position: fixed;
+            top: 0; left: 0;
             width: 100vw;
             height: 100vh;
         }
-        #ui-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: 10;
-        }
-        #stats-bar {
+
+        /* Top Stats */
+        #top-bar {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: linear-gradient(180deg, rgba(20,24,40,0.95) 0%, rgba(20,24,40,0) 100%);
-            padding: 12px 16px 24px;
+            padding: max(env(safe-area-inset-top), 12px) 20px 12px;
             display: flex;
-            justify-content: space-around;
-            pointer-events: auto;
-            z-index: 11;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
         }
-        .stat-item {
+        .top-stat {
             text-align: center;
-            color: #fff;
         }
-        .stat-value {
-            font-size: 28px;
+        .top-stat-value {
+            font-size: 22px;
             font-weight: 800;
-            background: linear-gradient(135deg, #4DE680, #00D4FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #00aaff;
+            text-shadow: 0 0 20px rgba(0,170,255,0.5);
         }
-        .stat-label {
-            font-size: 10px;
+        .top-stat-label {
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.5);
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.35);
             margin-top: 2px;
         }
-        #bottom-bar {
+
+        /* Bottom Navigation */
+        #bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: linear-gradient(0deg, rgba(20,24,40,0.95) 0%, rgba(20,24,40,0) 100%);
-            padding: 24px 16px 16px;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            pointer-events: auto;
-            z-index: 11;
-            padding-bottom: max(16px, env(safe-area-inset-bottom));
-        }
-        .btn {
-            border: none;
-            border-radius: 16px;
-            padding: 14px 20px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn:active { transform: scale(0.95); }
-        .btn-primary {
-            background: linear-gradient(135deg, #4DE680, #00D4FF);
-            color: #141828;
-            box-shadow: 0 4px 20px rgba(77, 230, 128, 0.3);
-            flex: 1;
-            justify-content: center;
-            max-width: 200px;
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            width: 52px;
-            height: 52px;
-            padding: 0;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        #milestone-popup {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: linear-gradient(135deg, rgba(77,230,128,0.15), rgba(0,212,255,0.15));
+            background: rgba(0,0,0,0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(77,230,128,0.3);
-            border-radius: 24px;
-            padding: 32px;
-            text-align: center;
+            border-top: 1px solid rgba(0,170,255,0.15);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: opacity 0.3s, transform 0.2s;
+            padding: 4px 12px;
+            border: none;
+            background: none;
             color: #fff;
+        }
+        .nav-item:active { transform: scale(0.9); }
+        .nav-item.active {
+            opacity: 1;
+            color: #00aaff;
+        }
+        .nav-item svg { width: 24px; height: 24px; }
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Workout Add Button */
+        #add-workout-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0066ff, #00aaff);
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            font-weight: 300;
+            cursor: pointer;
+            z-index: 21;
+            box-shadow: 0 4px 30px rgba(0,170,255,0.4), 0 0 60px rgba(0,170,255,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #add-workout-btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 2px 15px rgba(0,170,255,0.3);
+        }
+
+        /* Milestone Popup */
+        #milestone-popup {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 100;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        #milestone-popup.show {
+            opacity: 1;
             pointer-events: auto;
+        }
+        .milestone-card {
+            background: linear-gradient(135deg, rgba(0,100,255,0.15), rgba(0,170,255,0.08));
+            border: 1px solid rgba(0,170,255,0.3);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            max-width: 320px;
+            transform: scale(0.8);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        #milestone-popup.show { transform: translate(-50%, -50%) scale(1); }
-        #milestone-popup h2 {
-            font-size: 48px;
-            margin-bottom: 8px;
+        #milestone-popup.show .milestone-card { transform: scale(1); }
+        .milestone-card h2 {
+            font-size: 56px;
+            font-weight: 900;
+            color: #00aaff;
+            text-shadow: 0 0 40px rgba(0,170,255,0.5);
         }
-        #milestone-popup p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
+        .milestone-card p {
+            color: rgba(255,255,255,0.6);
+            font-size: 16px;
+            margin-top: 8px;
         }
-        #milestone-popup .close-btn {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #4DE680, #00D4FF);
-            color: #141828;
+        .milestone-card button {
+            margin-top: 24px;
+            background: linear-gradient(135deg, #0066ff, #00aaff);
+            color: #fff;
             border: none;
-            padding: 12px 32px;
-            border-radius: 12px;
+            padding: 14px 40px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
+            font-family: inherit;
         }
+
+        /* Confetti */
         @keyframes confetti-fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
             z-index: 99;
             pointer-events: none;
             animation: confetti-fall 3s ease-in forwards;
         }
+
+        /* Scroll hint */
+        #scroll-hint {
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.2);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 15;
+            animation: pulse-hint 2s infinite;
+        }
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body>
-    <canvas id="game"></canvas>
+    <div id="scene-container"></div>
 
-    <div id="ui-overlay">
-        <div id="stats-bar">
-            <div class="stat-item">
-                <div class="stat-value" id="workout-count">0</div>
-                <div class="stat-label">Workouts</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="streak-count">0</div>
-                <div class="stat-label">Streak</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="distance-count">0m</div>
-                <div class="stat-label">Strecke</div>
-            </div>
+    <!-- Top Stats -->
+    <div id="top-bar">
+        <div class="top-stat">
+            <div class="top-stat-value" id="stat-workouts">0</div>
+            <div class="top-stat-label">Workouts</div>
         </div>
-
-        <div id="bottom-bar">
-            <button class="btn btn-secondary" id="btn-start" title="Zum Start">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
-            </button>
-            <button class="btn btn-primary" id="btn-workout">+ WORKOUT</button>
-            <button class="btn btn-secondary" id="btn-focus" title="Zum Avatar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg>
-            </button>
-            <button class="btn btn-secondary" id="btn-screenshot" title="Screenshot">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            </button>
+        <div class="top-stat">
+            <div class="top-stat-value" id="stat-streak">0</div>
+            <div class="top-stat-label">Streak</div>
+        </div>
+        <div class="top-stat">
+            <div class="top-stat-value" id="stat-volume">0</div>
+            <div class="top-stat-label">Tonnen</div>
         </div>
     </div>
 
+    <!-- FAB -->
+    <button id="add-workout-btn">+</button>
+
+    <div id="scroll-hint">Wischen zum Scrollen</div>
+
+    <!-- Bottom Nav -->
+    <nav id="bottom-nav">
+        <button class="nav-item" data-tab="profil">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="nav-label">Profil</span>
+        </button>
+        <button class="nav-item" data-tab="suche">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span class="nav-label">Suche</span>
+        </button>
+        <button class="nav-item active" data-tab="track">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>
+            <span class="nav-label">Track</span>
+        </button>
+        <button class="nav-item" data-tab="workout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8"/></svg>
+            <span class="nav-label">Workout</span>
+        </button>
+        <button class="nav-item" data-tab="stats">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <span class="nav-label">Vol. Rechner</span>
+        </button>
+    </nav>
+
+    <!-- Milestone Popup -->
     <div id="milestone-popup">
-        <h2 id="milestone-title"></h2>
-        <p id="milestone-text"></p>
-        <button class="close-btn" onclick="closeMilestone()">Weiter!</button>
+        <div class="milestone-card">
+            <h2 id="ms-title"></h2>
+            <p id="ms-text"></p>
+            <button onclick="document.getElementById('milestone-popup').classList.remove('show')">Weiter!</button>
+        </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-    // ===== GAME ENGINE =====
-    const canvas = document.getElementById('game');
-    const ctx = canvas.getContext('2d');
-
-    let W, H, dpr;
-    function resize() {
-        dpr = window.devicePixelRatio || 1;
-        W = window.innerWidth;
-        H = window.innerHeight;
-        canvas.width = W * dpr;
-        canvas.height = H * dpr;
-        canvas.style.width = W + 'px';
-        canvas.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
     // ===== DATA =====
     const MILESTONES = [1, 5, 10, 25, 50, 75, 100, 150, 200, 365];
-    const MILESTONE_COLORS = ['#4DE680','#00D4FF','#FFD700','#FF6B9D','#A855F7','#FF8C42','#00E5FF','#FF4081','#76FF03','#E040FB'];
-    const WORKOUT_TYPES = ['Krafttraining', 'Cardio', 'HIIT', 'Yoga', 'Laufen'];
+    const WORKOUT_TYPES = [
+        'BRUST, TRIZEPS', 'RUECKEN, BIZEPS', 'BEINE, SCHULTERN',
+        'PUSH DAY', 'PULL DAY', 'LEG DAY', 'CARDIO', 'HIIT',
+        'OBERKÖRPER', 'GANZKÖRPER'
+    ];
+    const WORKOUT_STATUS = ['Workout abgeschlossen', 'Workout geplant', 'Workout abgeschlossen'];
 
-    let workoutData = JSON.parse(localStorage.getItem('beontrack_data') || 'null') || { workouts: [], streak: 0 };
-    let reachedMilestones = JSON.parse(localStorage.getItem('beontrack_milestones') || '[]');
+    let data = JSON.parse(localStorage.getItem('bot3d_data') || 'null') || { workouts: [] };
+    let reachedMs = JSON.parse(localStorage.getItem('bot3d_ms') || '[]');
 
-    function saveData() {
-        localStorage.setItem('beontrack_data', JSON.stringify(workoutData));
-        localStorage.setItem('beontrack_milestones', JSON.stringify(reachedMilestones));
-    }
-
-    // Generate sample data if empty
-    if (workoutData.workouts.length === 0) {
-        for (let i = 20; i >= 0; i--) {
-            if (Math.random() > 0.4) {
-                workoutData.workouts.push({
-                    date: new Date(Date.now() - i * 86400000).toISOString(),
+    if (data.workouts.length === 0) {
+        for (let i = 14; i >= 0; i--) {
+            if (Math.random() > 0.35) {
+                const d = new Date(Date.now() - i * 86400000);
+                data.workouts.push({
+                    date: d.toISOString(),
                     type: WORKOUT_TYPES[Math.floor(Math.random() * WORKOUT_TYPES.length)],
-                    duration: 20 + Math.floor(Math.random() * 70)
+                    status: 'Workout abgeschlossen',
+                    duration: 40 + Math.floor(Math.random() * 50)
                 });
             }
         }
-        // Mark milestones already passed
-        const count = workoutData.workouts.length;
-        MILESTONES.forEach(m => { if (count >= m) reachedMilestones.push(m); });
+        // Add a planned future workout
+        const tomorrow = new Date(Date.now() + 86400000);
+        data.workouts.push({
+            date: tomorrow.toISOString(),
+            type: WORKOUT_TYPES[Math.floor(Math.random() * WORKOUT_TYPES.length)],
+            status: 'Workout geplant',
+            duration: 0
+        });
+        const count = data.workouts.length;
+        MILESTONES.forEach(m => { if (count >= m) reachedMs.push(m); });
         saveData();
+    }
+
+    function saveData() {
+        localStorage.setItem('bot3d_data', JSON.stringify(data));
+        localStorage.setItem('bot3d_ms', JSON.stringify(reachedMs));
     }
 
     function calcStreak() {
         let streak = 0;
         const today = new Date().setHours(0,0,0,0);
-        let checkDate = today;
-        const dates = workoutData.workouts.map(w => new Date(w.date).setHours(0,0,0,0));
-        const uniqueDates = [...new Set(dates)].sort((a,b) => b - a);
-
-        for (let d of uniqueDates) {
-            if (d === checkDate || d === checkDate - 86400000) {
-                streak++;
-                checkDate = d;
-            } else if (d < checkDate - 86400000) break;
+        let check = today;
+        const dates = data.workouts.filter(w => w.status !== 'Workout geplant')
+            .map(w => new Date(w.date).setHours(0,0,0,0));
+        const unique = [...new Set(dates)].sort((a,b) => b - a);
+        for (const d of unique) {
+            if (d === check || d === check - 86400000) { streak++; check = d; }
+            else if (d < check - 86400000) break;
         }
         return streak;
     }
 
-    // ===== CAMERA =====
-    let camera = { x: 0, y: 0, zoom: 1, targetX: 0, targetY: 0, velX: 0, velY: 0 };
-    let isDragging = false, dragStartX = 0, dragStartY = 0, lastDragX = 0, lastDragY = 0;
-    let autoFollow = true, autoFollowTimer = 0;
-
-    // ===== PATH =====
-    const STEP_SIZE = 3;
-    const CURVE_FREQ = 0.08;
-    const CURVE_AMP = 2.5;
-
-    function getPathPoint(t) {
-        const x = t * STEP_SIZE;
-        const y = Math.sin(t * CURVE_FREQ) * CURVE_AMP + Math.sin(t * CURVE_FREQ * 0.5) * CURVE_AMP * 0.5;
-        return { x, y };
+    function formatDate(iso) {
+        const d = new Date(iso);
+        return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 
-    // ===== AVATAR =====
-    let avatar = { x: 0, y: 0, targetX: 0, targetY: 0, bounce: 0, isMoving: false, breathe: 0 };
+    // ===== THREE.JS SCENE =====
+    const container = document.getElementById('scene-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x000510, 0.035);
 
-    function updateAvatarTarget() {
-        const count = workoutData.workouts.length;
-        const p = getPathPoint(count);
-        avatar.targetX = p.x;
-        avatar.targetY = p.y;
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2.8, 5.5);
+    camera.lookAt(0, 1.2, -2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    // ===== LIGHTS =====
+    // Blue atmospheric back light
+    const backLight = new THREE.PointLight(0x0066ff, 8, 30);
+    backLight.position.set(0, 6, -15);
+    scene.add(backLight);
+
+    const backLight2 = new THREE.PointLight(0x0044cc, 4, 20);
+    backLight2.position.set(-3, 3, -10);
+    scene.add(backLight2);
+
+    const backLight3 = new THREE.PointLight(0x0088ff, 3, 20);
+    backLight3.position.set(3, 3, -10);
+    scene.add(backLight3);
+
+    // Subtle rim light on figure
+    const rimLight = new THREE.SpotLight(0x0077ff, 3, 15, Math.PI / 4, 0.5);
+    rimLight.position.set(0, 5, -5);
+    rimLight.target.position.set(0, 1, 0);
+    scene.add(rimLight);
+    scene.add(rimLight.target);
+
+    // Ambient
+    const ambient = new THREE.AmbientLight(0x001133, 0.5);
+    scene.add(ambient);
+
+    // Ground glow
+    const groundLight = new THREE.PointLight(0x003388, 2, 8);
+    groundLight.position.set(0, 0.1, 0);
+    scene.add(groundLight);
+
+    // ===== REFLECTIVE GROUND =====
+    const groundGeo = new THREE.PlaneGeometry(40, 60);
+    const groundMat = new THREE.MeshPhongMaterial({
+        color: 0x000815,
+        specular: 0x003366,
+        shininess: 80,
+        transparent: true,
+        opacity: 0.9,
+    });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.01;
+    scene.add(ground);
+
+    // ===== GRID LINES =====
+    const gridHelper = new THREE.GridHelper(40, 80, 0x001a44, 0x000d22);
+    gridHelper.position.y = 0.01;
+    scene.add(gridHelper);
+
+    // ===== FIGURE (Silhouette) =====
+    const figureGroup = new THREE.Group();
+
+    // Body (torso)
+    const torsoGeo = new THREE.CylinderGeometry(0.32, 0.38, 1.1, 8);
+    const figureMat = new THREE.MeshPhongMaterial({
+        color: 0x050810,
+        specular: 0x0033aa,
+        shininess: 30,
+        emissive: 0x000205,
+    });
+    const torso = new THREE.Mesh(torsoGeo, figureMat);
+    torso.position.y = 1.35;
+    figureGroup.add(torso);
+
+    // Head (with hood shape)
+    const headGeo = new THREE.SphereGeometry(0.25, 12, 12);
+    const head = new THREE.Mesh(headGeo, figureMat);
+    head.position.y = 2.1;
+    head.scale.set(1, 1.1, 1);
+    figureGroup.add(head);
+
+    // Hood
+    const hoodGeo = new THREE.SphereGeometry(0.32, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.6);
+    const hood = new THREE.Mesh(hoodGeo, figureMat);
+    hood.position.y = 2.15;
+    hood.position.z = -0.02;
+    hood.scale.set(1, 1.15, 1.2);
+    figureGroup.add(hood);
+
+    // Neck
+    const neckGeo = new THREE.CylinderGeometry(0.15, 0.18, 0.2, 8);
+    const neck = new THREE.Mesh(neckGeo, figureMat);
+    neck.position.y = 1.92;
+    figureGroup.add(neck);
+
+    // Arms
+    const armGeo = new THREE.CylinderGeometry(0.09, 0.11, 0.85, 6);
+    const leftArm = new THREE.Mesh(armGeo, figureMat);
+    leftArm.position.set(-0.45, 1.25, 0);
+    leftArm.rotation.z = 0.12;
+    figureGroup.add(leftArm);
+    const rightArm = new THREE.Mesh(armGeo, figureMat);
+    rightArm.position.set(0.45, 1.25, 0);
+    rightArm.rotation.z = -0.12;
+    figureGroup.add(rightArm);
+
+    // Forearms
+    const forearmGeo = new THREE.CylinderGeometry(0.07, 0.09, 0.7, 6);
+    const leftForearm = new THREE.Mesh(forearmGeo, figureMat);
+    leftForearm.position.set(-0.48, 0.55, 0.05);
+    leftForearm.rotation.z = 0.05;
+    figureGroup.add(leftForearm);
+    const rightForearm = new THREE.Mesh(forearmGeo, figureMat);
+    rightForearm.position.set(0.48, 0.55, 0.05);
+    rightForearm.rotation.z = -0.05;
+    figureGroup.add(rightForearm);
+
+    // Legs
+    const legGeo = new THREE.CylinderGeometry(0.12, 0.1, 1.0, 6);
+    const leftLeg = new THREE.Mesh(legGeo, figureMat);
+    leftLeg.position.set(-0.18, 0.42, 0);
+    figureGroup.add(leftLeg);
+    const rightLeg = new THREE.Mesh(legGeo.clone(), figureMat);
+    rightLeg.position.set(0.18, 0.42, 0);
+    figureGroup.add(rightLeg);
+
+    // Feet
+    const footGeo = new THREE.BoxGeometry(0.14, 0.08, 0.28);
+    const leftFoot = new THREE.Mesh(footGeo, figureMat);
+    leftFoot.position.set(-0.18, -0.04, 0.05);
+    figureGroup.add(leftFoot);
+    const rightFoot = new THREE.Mesh(footGeo, figureMat);
+    rightFoot.position.set(0.18, -0.04, 0.05);
+    figureGroup.add(rightFoot);
+
+    // Shoulders
+    const shoulderGeo = new THREE.SphereGeometry(0.16, 8, 8);
+    const leftShoulder = new THREE.Mesh(shoulderGeo, figureMat);
+    leftShoulder.position.set(-0.42, 1.72, 0);
+    figureGroup.add(leftShoulder);
+    const rightShoulder = new THREE.Mesh(shoulderGeo, figureMat);
+    rightShoulder.position.set(0.42, 1.72, 0);
+    figureGroup.add(rightShoulder);
+
+    figureGroup.position.set(0, 0, 0);
+    scene.add(figureGroup);
+
+    // ===== WORKOUT PANELS =====
+    let panelMeshes = [];
+    let panelGlows = [];
+
+    function createTextCanvas(text1, text2, text3, isPlanned) {
+        const c = document.createElement('canvas');
+        c.width = 512;
+        c.height = 160;
+        const x = c.getContext('2d');
+
+        // Background
+        x.fillStyle = 'rgba(0,10,30,0.6)';
+        x.fillRect(0, 0, 512, 160);
+
+        // Border
+        const borderColor = isPlanned ? 'rgba(0,150,255,0.6)' : 'rgba(0,100,255,0.3)';
+        x.strokeStyle = borderColor;
+        x.lineWidth = 2;
+        x.strokeRect(2, 2, 508, 156);
+
+        // Corner accents
+        x.strokeStyle = isPlanned ? 'rgba(0,170,255,0.8)' : 'rgba(0,120,255,0.5)';
+        x.lineWidth = 3;
+        const cl = 20;
+        // Top-left
+        x.beginPath(); x.moveTo(2,cl); x.lineTo(2,2); x.lineTo(cl,2); x.stroke();
+        // Top-right
+        x.beginPath(); x.moveTo(510-cl,2); x.lineTo(510,2); x.lineTo(510,cl); x.stroke();
+        // Bottom-left
+        x.beginPath(); x.moveTo(2,158-cl); x.lineTo(2,158); x.lineTo(cl,158); x.stroke();
+        // Bottom-right
+        x.beginPath(); x.moveTo(510-cl,158); x.lineTo(510,158); x.lineTo(510,158-cl); x.stroke();
+
+        // Text
+        x.textAlign = 'center';
+
+        // Workout type
+        x.font = 'bold 36px Inter, sans-serif';
+        x.fillStyle = isPlanned ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.7)';
+        x.fillText(text1, 256, 55);
+
+        // Status
+        x.font = '300 18px Inter, sans-serif';
+        x.fillStyle = isPlanned ? 'rgba(0,180,255,0.8)' : 'rgba(255,255,255,0.35)';
+        x.fillText(text2, 256, 90);
+
+        // Date
+        x.font = '600 28px Inter, sans-serif';
+        x.fillStyle = isPlanned ? 'rgba(0,200,255,0.9)' : 'rgba(0,150,255,0.6)';
+        x.fillText(text3, 256, 130);
+
+        return c;
     }
-    updateAvatarTarget();
-    // Set initial position
-    const initP = getPathPoint(workoutData.workouts.length);
-    avatar.x = initP.x;
-    avatar.y = initP.y;
 
-    // ===== PARALLAX LAYERS =====
-    const bgLayers = [
-        { color: '#1E2340', factor: 0.05, y: -3, h: 12 },
-        { color: '#2A3355', factor: 0.15, y: 1, h: 8 },
-        { color: '#1B4D3E', factor: 0.3, y: 4, h: 6 },
-        { color: '#2D5A4A', factor: 0.5, y: 7, h: 5 }
-    ];
+    function buildPanels() {
+        // Remove old panels
+        panelMeshes.forEach(m => scene.remove(m));
+        panelGlows.forEach(m => scene.remove(m));
+        panelMeshes = [];
+        panelGlows = [];
 
-    // ===== FLOATING PARTICLES =====
-    const PARTICLE_COLORS = ['rgba(255,215,0,0.3)','rgba(0,212,255,0.25)','rgba(77,230,128,0.25)','rgba(255,107,157,0.2)','rgba(168,85,247,0.2)'];
-    let particles = [];
-    for (let i = 0; i < 40; i++) {
-        particles.push({
-            x: (Math.random() - 0.5) * 40,
-            y: (Math.random() - 0.5) * 20,
-            size: 2 + Math.random() * 6,
-            speed: 0.2 + Math.random() * 0.8,
-            phase: Math.random() * Math.PI * 2,
-            color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
+        const workouts = [...data.workouts].reverse();
+
+        workouts.forEach((w, i) => {
+            const isPlanned = w.status === 'Workout geplant';
+            const isCurrent = i === 0;
+
+            const canvas = createTextCanvas(
+                w.type,
+                w.status,
+                formatDate(w.date),
+                isCurrent
+            );
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.minFilter = THREE.LinearFilter;
+
+            const panelGeo = new THREE.PlaneGeometry(3.2, 1.0);
+            const panelMat = new THREE.MeshBasicMaterial({
+                map: texture,
+                transparent: true,
+                opacity: isCurrent ? 1.0 : Math.max(0.15, 0.8 - i * 0.08),
+                side: THREE.DoubleSide,
+            });
+
+            const panel = new THREE.Mesh(panelGeo, panelMat);
+            const z = -1.5 - i * 1.8;
+            panel.position.set(0, 0.02, z);
+            panel.rotation.x = -Math.PI / 2;
+            scene.add(panel);
+            panelMeshes.push(panel);
+
+            // Glow edge for current/recent panels
+            if (i < 4) {
+                const glowGeo = new THREE.PlaneGeometry(3.4, 1.15);
+                const glowMat = new THREE.MeshBasicMaterial({
+                    color: isCurrent ? 0x0088ff : 0x003366,
+                    transparent: true,
+                    opacity: isCurrent ? 0.25 : 0.08,
+                    side: THREE.DoubleSide,
+                });
+                const glow = new THREE.Mesh(glowGeo, glowMat);
+                glow.position.set(0, 0.01, z);
+                glow.rotation.x = -Math.PI / 2;
+                scene.add(glow);
+                panelGlows.push(glow);
+            }
+
+            // Reflection (flipped, faded)
+            if (i < 5) {
+                const refMat = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    opacity: Math.max(0.03, 0.12 - i * 0.02),
+                    side: THREE.DoubleSide,
+                });
+                const ref = new THREE.Mesh(panelGeo.clone(), refMat);
+                ref.position.set(0, -0.03, z);
+                ref.rotation.x = Math.PI / 2;
+                scene.add(ref);
+                panelMeshes.push(ref);
+            }
         });
     }
 
-    // ===== CONFETTI =====
-    let confettiParticles = [];
+    buildPanels();
+
+    // ===== ATMOSPHERIC PARTICLES =====
+    const particleCount = 100;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleSizes = new Float32Array(particleCount);
+
+    for (let i = 0; i < particleCount; i++) {
+        particlePositions[i * 3] = (Math.random() - 0.5) * 20;
+        particlePositions[i * 3 + 1] = Math.random() * 8;
+        particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 30 - 5;
+        particleSizes[i] = Math.random() * 3 + 1;
+    }
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+    const particleMat = new THREE.PointsMaterial({
+        color: 0x0066cc,
+        size: 0.06,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+    });
+    const particleSystem = new THREE.Points(particleGeo, particleMat);
+    scene.add(particleSystem);
+
+    // ===== BLUE VOLUMETRIC RAYS (simulated) =====
+    for (let i = 0; i < 5; i++) {
+        const rayGeo = new THREE.PlaneGeometry(0.3 + Math.random() * 0.5, 15);
+        const rayMat = new THREE.MeshBasicMaterial({
+            color: 0x0055cc,
+            transparent: true,
+            opacity: 0.03 + Math.random() * 0.03,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        });
+        const ray = new THREE.Mesh(rayGeo, rayMat);
+        ray.position.set((Math.random() - 0.5) * 6, 4, -12 + Math.random() * 4);
+        ray.rotation.z = (Math.random() - 0.5) * 0.3;
+        scene.add(ray);
+    }
+
+    // ===== SCROLL / DRAG =====
+    let scrollY = 0;
+    let targetScrollY = 0;
+    let dragActive = false;
+    let dragLastY = 0;
+    let velocity = 0;
+
+    const maxScroll = Math.max(0, (data.workouts.length - 2) * 1.8);
+
+    renderer.domElement.addEventListener('pointerdown', (e) => {
+        dragActive = true;
+        dragLastY = e.clientY;
+        velocity = 0;
+    });
+    renderer.domElement.addEventListener('pointermove', (e) => {
+        if (!dragActive) return;
+        const dy = e.clientY - dragLastY;
+        targetScrollY -= dy * 0.012;
+        velocity = -dy * 0.012;
+        dragLastY = e.clientY;
+    });
+    renderer.domElement.addEventListener('pointerup', () => { dragActive = false; });
+    renderer.domElement.addEventListener('pointerleave', () => { dragActive = false; });
+
+    renderer.domElement.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        targetScrollY += e.deltaY * 0.005;
+    }, { passive: false });
+
+    // ===== RESIZE =====
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ===== UI =====
+    function updateUI() {
+        const completed = data.workouts.filter(w => w.status !== 'Workout geplant').length;
+        document.getElementById('stat-workouts').textContent = completed;
+        document.getElementById('stat-streak').textContent = calcStreak();
+        document.getElementById('stat-volume').textContent = (completed * 2.4).toFixed(1);
+    }
+    updateUI();
+
+    // Nav items
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Add workout
+    document.getElementById('add-workout-btn').addEventListener('click', () => {
+        const w = {
+            date: new Date().toISOString(),
+            type: WORKOUT_TYPES[Math.floor(Math.random() * WORKOUT_TYPES.length)],
+            status: 'Workout abgeschlossen',
+            duration: 40 + Math.floor(Math.random() * 50)
+        };
+        data.workouts.push(w);
+        saveData();
+        buildPanels();
+        updateUI();
+
+        // Scroll hint removal
+        const hint = document.getElementById('scroll-hint');
+        if (hint) hint.style.display = 'none';
+
+        // Check milestones
+        const count = data.workouts.filter(x => x.status !== 'Workout geplant').length;
+        MILESTONES.forEach(m => {
+            if (count === m && !reachedMs.includes(m)) {
+                reachedMs.push(m);
+                saveData();
+                setTimeout(() => {
+                    document.getElementById('ms-title').textContent = m + ' Workouts!';
+                    document.getElementById('ms-text').textContent = getMsMsg(m);
+                    document.getElementById('milestone-popup').classList.add('show');
+                    spawnConfetti();
+                }, 300);
+            }
+        });
+    });
+
+    function getMsMsg(c) {
+        const m = { 1:'Erster Schritt!', 5:'Fuenf am Stueck!', 10:'Zweistellig!', 25:'Viertel-Hundert!',
+            50:'Halbzeit!', 75:'Drei Viertel!', 100:'HUNDERT!', 150:'Wahnsinn!', 200:'Zweihundert!', 365:'LEGENDE!' };
+        return m[c] || 'Meilenstein!';
+    }
 
     function spawnConfetti() {
-        const colors = ['#4DE680','#00D4FF','#FFD700','#FF6B9D','#A855F7','#FF8C42'];
-        for (let i = 0; i < 60; i++) {
+        const colors = ['#0088ff','#00aaff','#0055cc','#00ddff','#ffffff','#0066ff'];
+        for (let i = 0; i < 50; i++) {
             const el = document.createElement('div');
             el.className = 'confetti';
             el.style.left = Math.random() * 100 + 'vw';
+            el.style.width = (4 + Math.random() * 8) + 'px';
+            el.style.height = (4 + Math.random() * 8) + 'px';
             el.style.background = colors[Math.floor(Math.random() * colors.length)];
-            el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-            el.style.width = (6 + Math.random() * 8) + 'px';
-            el.style.height = (6 + Math.random() * 8) + 'px';
-            el.style.animationDelay = (Math.random() * 2) + 's';
-            el.style.animationDuration = (2 + Math.random() * 2) + 's';
+            el.style.borderRadius = Math.random() > 0.5 ? '50%' : '1px';
+            el.style.animationDelay = (Math.random() * 1.5) + 's';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 5000);
         }
     }
 
-    // ===== WORLD TO SCREEN =====
-    function worldToScreen(wx, wy) {
-        const sx = (wx - camera.x) * camera.zoom * 40 + W / 2;
-        const sy = -(wy - camera.y) * camera.zoom * 40 + H / 2;
-        return { x: sx, y: sy };
-    }
+    // ===== ANIMATION LOOP =====
+    const clock = new THREE.Clock();
 
-    function screenToWorld(sx, sy) {
-        const wx = (sx - W / 2) / (camera.zoom * 40) + camera.x;
-        const wy = -((sy - H / 2) / (camera.zoom * 40)) + camera.y;
-        return { x: wx, y: wy };
-    }
+    function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        const dt = Math.min(clock.getDelta(), 0.05);
 
-    // ===== INPUT =====
-    let touches = [];
-    let lastPinchDist = 0;
-
-    canvas.addEventListener('pointerdown', (e) => {
-        isDragging = true;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        lastDragX = e.clientX;
-        lastDragY = e.clientY;
-        camera.velX = 0;
-        camera.velY = 0;
-        autoFollow = false;
-        autoFollowTimer = 0;
-    });
-
-    canvas.addEventListener('pointermove', (e) => {
-        if (!isDragging) return;
-        const dx = (e.clientX - lastDragX) / (camera.zoom * 40);
-        const dy = (e.clientY - lastDragY) / (camera.zoom * 40);
-        camera.x -= dx;
-        camera.y += dy;
-        camera.velX = -dx;
-        camera.velY = dy;
-        lastDragX = e.clientX;
-        lastDragY = e.clientY;
-    });
-
-    canvas.addEventListener('pointerup', () => {
-        isDragging = false;
-        autoFollowTimer = Date.now();
-    });
-
-    canvas.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
-        camera.zoom = Math.max(0.3, Math.min(3, camera.zoom * zoomDelta));
-        autoFollow = false;
-        autoFollowTimer = Date.now();
-    }, { passive: false });
-
-    // Touch pinch zoom
-    canvas.addEventListener('touchstart', (e) => {
-        touches = [...e.touches];
-        if (touches.length === 2) {
-            lastPinchDist = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+        // Scroll physics
+        if (!dragActive) {
+            velocity *= 0.92;
+            targetScrollY += velocity;
         }
-    }, { passive: true });
+        targetScrollY = Math.max(-1, Math.min(maxScroll + 2, targetScrollY));
+        scrollY += (targetScrollY - scrollY) * 0.08;
 
-    canvas.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-            const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-            if (lastPinchDist > 0) {
-                const scale = dist / lastPinchDist;
-                camera.zoom = Math.max(0.3, Math.min(3, camera.zoom * scale));
-            }
-            lastPinchDist = dist;
-        }
-    }, { passive: true });
-
-    canvas.addEventListener('touchend', () => {
-        lastPinchDist = 0;
-    });
-
-    // ===== UI EVENTS =====
-    document.getElementById('btn-workout').addEventListener('click', () => {
-        workoutData.workouts.push({
-            date: new Date().toISOString(),
-            type: WORKOUT_TYPES[Math.floor(Math.random() * WORKOUT_TYPES.length)],
-            duration: 20 + Math.floor(Math.random() * 70)
+        // Move panels with scroll
+        panelMeshes.forEach(m => {
+            m.position.z += (scrollY - (m.userData.lastScroll || 0));
+            m.userData.lastScroll = scrollY;
         });
-        saveData();
-        updateAvatarTarget();
-        avatar.isMoving = true;
-        autoFollow = true;
+        panelGlows.forEach(m => {
+            m.position.z += (scrollY - (m.userData.lastScroll || 0));
+            m.userData.lastScroll = scrollY;
+        });
 
-        // Check milestones
-        const count = workoutData.workouts.length;
-        MILESTONES.forEach((m, i) => {
-            if (count === m && !reachedMilestones.includes(m)) {
-                reachedMilestones.push(m);
-                saveData();
-                setTimeout(() => showMilestone(m, i), 800);
+        // Actually just reposition based on scroll
+        const workouts = [...data.workouts].reverse();
+        let meshIdx = 0;
+        workouts.forEach((w, i) => {
+            const z = -1.5 - i * 1.8 + scrollY;
+            if (panelMeshes[meshIdx]) {
+                panelMeshes[meshIdx].position.z = z;
+                meshIdx++;
+            }
+            // Reflection
+            if (i < 5 && panelMeshes[meshIdx]) {
+                panelMeshes[meshIdx].position.z = z;
+                meshIdx++;
             }
         });
 
-        updateUI();
-    });
-
-    document.getElementById('btn-focus').addEventListener('click', () => {
-        autoFollow = true;
-        camera.zoom = 1;
-    });
-
-    document.getElementById('btn-start').addEventListener('click', () => {
-        autoFollow = false;
-        camera.x = 0;
-        camera.y = 0;
-        camera.zoom = 0.6;
-    });
-
-    document.getElementById('btn-screenshot').addEventListener('click', () => {
-        // Hide UI, capture, show UI
-        document.getElementById('ui-overlay').style.display = 'none';
-        requestAnimationFrame(() => {
-            canvas.toBlob((blob) => {
-                document.getElementById('ui-overlay').style.display = '';
-                if (navigator.share && blob) {
-                    const file = new File([blob], 'BeOnTrack-Journey.png', { type: 'image/png' });
-                    navigator.share({ title: 'Meine BeOnTrack Journey', files: [file] }).catch(() => {});
-                } else if (blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'BeOnTrack-Journey.png';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                }
-            });
-        });
-    });
-
-    function showMilestone(count, index) {
-        const popup = document.getElementById('milestone-popup');
-        document.getElementById('milestone-title').textContent = count + ' Workouts!';
-        document.getElementById('milestone-title').style.color = MILESTONE_COLORS[index];
-        document.getElementById('milestone-text').textContent = getMilestoneMessage(count);
-        popup.classList.add('show');
-        spawnConfetti();
-    }
-
-    function closeMilestone() {
-        document.getElementById('milestone-popup').classList.remove('show');
-    }
-
-    function getMilestoneMessage(count) {
-        const msgs = {
-            1: 'Der erste Schritt ist getan!',
-            5: 'Fuenf geschafft - Routine beginnt!',
-            10: 'Zweistellig - du bist dabei!',
-            25: 'Viertel-Hundert - stark!',
-            50: 'Halbzeit zum Club der 100!',
-            75: 'Drei Viertel - nicht aufhoeren!',
-            100: 'HUNDERT! Du bist eine Maschine!',
-            150: 'Absoluter Wahnsinn!',
-            200: 'Zweihundert - Respekt!',
-            365: 'Ein ganzes Jahr - LEGENDE!'
-        };
-        return msgs[count] || 'Meilenstein erreicht!';
-    }
-
-    function updateUI() {
-        const count = workoutData.workouts.length;
-        document.getElementById('workout-count').textContent = count;
-        document.getElementById('streak-count').textContent = calcStreak();
-        document.getElementById('distance-count').textContent = (count * STEP_SIZE).toFixed(0) + 'm';
-    }
-    updateUI();
-
-    // ===== RENDER =====
-    let lastTime = 0;
-
-    function drawFrame(time) {
-        const dt = Math.min((time - lastTime) / 1000, 0.05);
-        lastTime = time;
-
-        ctx.clearRect(0, 0, W, H);
-
-        // Auto-follow timeout
-        if (!autoFollow && autoFollowTimer > 0 && Date.now() - autoFollowTimer > 4000) {
-            autoFollow = true;
-        }
-
-        // Camera follow avatar
-        if (autoFollow && !isDragging) {
-            camera.x += (avatar.x - camera.x) * 3 * dt;
-            camera.y += (avatar.y - camera.y) * 3 * dt;
-        } else if (!isDragging) {
-            camera.x += camera.velX * 0.95;
-            camera.y += camera.velY * 0.95;
-            camera.velX *= 0.95;
-            camera.velY *= 0.95;
-        }
-
-        // ---- BACKGROUND LAYERS ----
-        bgLayers.forEach(layer => {
-            const offsetX = camera.x * layer.factor * camera.zoom * 40;
-            const screenY = -(layer.y - camera.y) * camera.zoom * 40 + H / 2;
-            const layerH = layer.h * camera.zoom * 40;
-
-            ctx.fillStyle = layer.color;
-            ctx.fillRect(0, screenY, W, layerH);
-        });
-
-        // ---- FLOATING PARTICLES ----
-        particles.forEach(p => {
-            p.x += 0.1 * dt;
-            p.y += Math.sin(time * 0.001 * p.speed + p.phase) * 0.02;
-
-            // Respawn
-            if (p.x > camera.x + 25) p.x = camera.x - 25;
-            if (p.x < camera.x - 25) p.x = camera.x + 25;
-
-            const sp = worldToScreen(p.x, p.y);
-            if (sp.x < -20 || sp.x > W + 20 || sp.y < -20 || sp.y > H + 20) return;
-
-            const alpha = Math.abs(Math.sin(time * 0.001 * p.speed * 0.5 + p.phase)) * 0.4;
-            const size = p.size * camera.zoom;
-
-            ctx.beginPath();
-            ctx.arc(sp.x, sp.y, size, 0, Math.PI * 2);
-            ctx.fillStyle = p.color.replace(/[\d.]+\)$/, alpha + ')');
-            ctx.fill();
-        });
-
-        // ---- PATH ----
-        const totalSteps = workoutData.workouts.length;
-        const maxDraw = totalSteps + 20;
-
-        // Future path (faded)
-        if (maxDraw > totalSteps) {
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-            ctx.lineWidth = Math.max(6, 18 * camera.zoom);
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            for (let t = totalSteps; t <= maxDraw; t += 0.5) {
-                const p = getPathPoint(t);
-                const sp = worldToScreen(p.x, p.y);
-                if (t === totalSteps) ctx.moveTo(sp.x, sp.y);
-                else ctx.lineTo(sp.x, sp.y);
-            }
-            ctx.stroke();
-        }
-
-        // Walked path (gradient)
-        if (totalSteps > 0) {
-            for (let t = 0; t < totalSteps; t += 0.3) {
-                const p = getPathPoint(t);
-                const sp = worldToScreen(p.x, p.y);
-                const p2 = getPathPoint(t + 0.3);
-                const sp2 = worldToScreen(p2.x, p2.y);
-
-                const progress = t / Math.max(totalSteps, 1);
-                const r = Math.round(77 + (0 - 77) * progress);
-                const g = Math.round(230 + (212 - 230) * progress);
-                const b = Math.round(128 + (255 - 128) * progress);
-
-                ctx.beginPath();
-                ctx.moveTo(sp.x, sp.y);
-                ctx.lineTo(sp2.x, sp2.y);
-                ctx.strokeStyle = `rgb(${r},${g},${b})`;
-                ctx.lineWidth = Math.max(8, 22 * camera.zoom);
-                ctx.lineCap = 'round';
-                ctx.stroke();
-
-                // Glow
-                ctx.beginPath();
-                ctx.moveTo(sp.x, sp.y);
-                ctx.lineTo(sp2.x, sp2.y);
-                ctx.strokeStyle = `rgba(${r},${g},${b},0.2)`;
-                ctx.lineWidth = Math.max(16, 40 * camera.zoom);
-                ctx.lineCap = 'round';
-                ctx.stroke();
-            }
-        }
-
-        // ---- MILESTONES ----
-        MILESTONES.forEach((m, i) => {
-            if (m > maxDraw) return;
-            const p = getPathPoint(m);
-            const sp = worldToScreen(p.x, p.y);
-            const reached = reachedMilestones.includes(m);
-            const color = MILESTONE_COLORS[i];
-            const flagSize = camera.zoom * 20;
-
-            // Flag pole
-            ctx.beginPath();
-            ctx.moveTo(sp.x, sp.y);
-            ctx.lineTo(sp.x, sp.y - flagSize * 3);
-            ctx.strokeStyle = reached ? color : 'rgba(255,255,255,0.2)';
-            ctx.lineWidth = 2 * camera.zoom;
-            ctx.stroke();
-
-            // Flag
-            ctx.beginPath();
-            ctx.moveTo(sp.x, sp.y - flagSize * 3);
-            ctx.lineTo(sp.x + flagSize * 1.5, sp.y - flagSize * 2.3);
-            ctx.lineTo(sp.x, sp.y - flagSize * 1.6);
-            ctx.fillStyle = reached ? color : 'rgba(255,255,255,0.1)';
-            ctx.fill();
-
-            // Number
-            ctx.fillStyle = reached ? '#fff' : 'rgba(255,255,255,0.3)';
-            ctx.font = `bold ${Math.max(10, 12 * camera.zoom)}px -apple-system, sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.fillText(m, sp.x, sp.y + flagSize * 1.5);
-
-            // Pulsing circle if reached
-            if (reached) {
-                const pulse = Math.sin(time * 0.003 + i) * 0.3 + 0.7;
-                ctx.beginPath();
-                ctx.arc(sp.x, sp.y, 8 * camera.zoom * pulse, 0, Math.PI * 2);
-                ctx.fillStyle = color + '40';
-                ctx.fill();
+        let glowIdx = 0;
+        workouts.forEach((w, i) => {
+            if (i < 4 && panelGlows[glowIdx]) {
+                panelGlows[glowIdx].position.z = -1.5 - i * 1.8 + scrollY;
+                glowIdx++;
             }
         });
 
-        // ---- AVATAR ----
-        // Move avatar towards target
-        const dx = avatar.targetX - avatar.x;
-        const dy = avatar.targetY - avatar.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // Figure subtle breathing
+        figureGroup.position.y = Math.sin(t * 1.5) * 0.015;
 
-        if (dist > 0.05) {
-            avatar.x += dx * 4 * dt;
-            avatar.y += dy * 4 * dt;
-            avatar.isMoving = true;
-            avatar.bounce += dt * 12;
-        } else {
-            avatar.isMoving = false;
-            avatar.breathe += dt * 2;
-        }
+        // Light pulsing
+        backLight.intensity = 8 + Math.sin(t * 0.8) * 1.5;
+        groundLight.intensity = 2 + Math.sin(t * 1.2) * 0.5;
 
-        const asp = worldToScreen(avatar.x, avatar.y);
-        const aSize = camera.zoom * 18;
-        const bounceY = avatar.isMoving ? Math.abs(Math.sin(avatar.bounce)) * aSize * 0.5 : Math.sin(avatar.breathe) * 2;
-        const squash = avatar.isMoving ? 1 + Math.sin(avatar.bounce) * 0.1 : 1;
-
-        // Glow
-        const glowGrad = ctx.createRadialGradient(asp.x, asp.y - bounceY, aSize * 0.5, asp.x, asp.y - bounceY, aSize * 2.5);
-        glowGrad.addColorStop(0, 'rgba(77, 230, 128, 0.25)');
-        glowGrad.addColorStop(1, 'rgba(77, 230, 128, 0)');
-        ctx.beginPath();
-        ctx.arc(asp.x, asp.y - bounceY, aSize * 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = glowGrad;
-        ctx.fill();
-
-        // Body
-        ctx.save();
-        ctx.translate(asp.x, asp.y - bounceY);
-        ctx.scale(1 / squash, squash);
-
-        // Main circle
-        const bodyGrad = ctx.createRadialGradient(-aSize * 0.2, -aSize * 0.2, aSize * 0.1, 0, 0, aSize);
-        bodyGrad.addColorStop(0, '#6FF59A');
-        bodyGrad.addColorStop(1, '#2DD866');
-        ctx.beginPath();
-        ctx.arc(0, 0, aSize, 0, Math.PI * 2);
-        ctx.fillStyle = bodyGrad;
-        ctx.fill();
-
-        // Eyes
-        const eyeOff = aSize * 0.3;
-        const eyeSize = aSize * 0.2;
-        ctx.fillStyle = '#141828';
-        ctx.beginPath();
-        ctx.arc(-eyeOff, -aSize * 0.1, eyeSize, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(eyeOff, -aSize * 0.1, eyeSize, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Eye highlights
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(-eyeOff + eyeSize * 0.3, -aSize * 0.1 - eyeSize * 0.3, eyeSize * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(eyeOff + eyeSize * 0.3, -aSize * 0.1 - eyeSize * 0.3, eyeSize * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Smile
-        ctx.beginPath();
-        ctx.arc(0, aSize * 0.15, aSize * 0.4, 0.1 * Math.PI, 0.9 * Math.PI);
-        ctx.strokeStyle = '#141828';
-        ctx.lineWidth = aSize * 0.08;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-
-        ctx.restore();
-
-        // ---- TRAIL behind avatar ----
-        if (avatar.isMoving) {
-            for (let i = 0; i < 3; i++) {
-                const trailP = getPathPoint(workoutData.workouts.length - 0.5 - i * 0.5);
-                const tsp = worldToScreen(trailP.x, trailP.y);
-                ctx.beginPath();
-                ctx.arc(tsp.x, tsp.y, (3 - i) * camera.zoom * 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(77,230,128,${0.3 - i * 0.1})`;
-                ctx.fill();
+        // Panel glow pulse
+        panelGlows.forEach((g, i) => {
+            if (i === 0) {
+                g.material.opacity = 0.2 + Math.sin(t * 2) * 0.08;
             }
-        }
+        });
 
-        requestAnimationFrame(drawFrame);
+        // Particles float
+        const positions = particleSystem.geometry.attributes.position.array;
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3 + 1] += Math.sin(t + i) * 0.002;
+            positions[i * 3] += Math.cos(t * 0.5 + i * 0.3) * 0.001;
+        }
+        particleSystem.geometry.attributes.position.needsUpdate = true;
+        particleMat.opacity = 0.3 + Math.sin(t * 0.7) * 0.1;
+
+        renderer.render(scene, camera);
     }
 
-    requestAnimationFrame(drawFrame);
+    animate();
     </script>
 </body>
 </html>
