@@ -12,35 +12,105 @@
         *{margin:0;padding:0;box-sizing:border-box}
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         body{background:#000;overflow:hidden;touch-action:none;font-family:'Inter',-apple-system,sans-serif;-webkit-user-select:none;user-select:none;color:#fff}
-        #c{position:fixed;top:0;left:0;width:100vw;height:100vh}
+        #c{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0}
 
+        /* TOP BAR */
         #top-bar{position:fixed;top:0;left:0;right:0;padding:max(env(safe-area-inset-top),12px) 20px 14px;display:flex;justify-content:space-between;z-index:20;background:linear-gradient(180deg,rgba(0,0,0,0.85) 0%,transparent 100%)}
-        .ts{text-align:center}
-        .tv{font-size:22px;font-weight:800;color:#00aaff;text-shadow:0 0 20px rgba(0,170,255,0.5)}
-        .tl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3);margin-top:2px}
+        .ts{text-align:center}.tv{font-size:22px;font-weight:800;color:#00aaff;text-shadow:0 0 20px rgba(0,170,255,0.5)}.tl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.3);margin-top:2px}
 
-        #bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,170,255,0.12);display:flex;justify-content:space-around;padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:20}
+        /* BOTTOM NAV */
+        #bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,170,255,0.12);display:flex;justify-content:space-around;padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:30}
         .ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.35;transition:all .3s;padding:4px 8px;border:none;background:none;color:#fff}
         .ni:active{transform:scale(0.9)}.ni.active{opacity:1;color:#00aaff}
         .ni svg{width:22px;height:22px}.nl{font-size:9px;font-weight:600;letter-spacing:.5px}
 
-        #fab{position:fixed;right:20px;bottom:85px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0055dd,#00aaff);border:none;color:#fff;font-size:26px;font-weight:300;cursor:pointer;z-index:21;box-shadow:0 4px 30px rgba(0,170,255,0.35),0 0 50px rgba(0,170,255,0.1);transition:transform .2s;display:flex;align-items:center;justify-content:center}
+        /* FAB */
+        #fab{position:fixed;right:20px;bottom:85px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0055dd,#00aaff);border:none;color:#fff;font-size:26px;font-weight:300;cursor:pointer;z-index:21;box-shadow:0 4px 30px rgba(0,170,255,0.35);transition:transform .2s;display:flex;align-items:center;justify-content:center}
         #fab:active{transform:scale(0.88)}
+        .hint{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.18);font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:15;animation:ph 2.5s infinite}
+        @keyframes ph{0%,100%{opacity:.15}50%{opacity:.4}}
 
-        /* Detail Popup */
+        /* TAB VIEWS */
+        .tab-view{position:fixed;top:0;left:0;right:0;bottom:64px;background:rgba(2,4,14,0.97);z-index:18;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding:max(env(safe-area-inset-top),50px) 20px 30px}
+        .tab-view.active{display:block}
+        .vh{font-size:26px;font-weight:800;margin-bottom:20px;color:#fff}
+        .vh2{font-size:15px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin:24px 0 12px}
+
+        /* PROFIL */
+        .sg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+        .sc{background:rgba(0,40,120,0.12);border:1px solid rgba(0,100,255,0.15);border-radius:14px;padding:16px;text-align:center}
+        .sc .sv2{font-size:28px;font-weight:800;color:#00aaff}.sc .sl2{font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+        .pri{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(0,60,160,0.12)}
+        .pri:last-child{border:none}.prn{font-size:14px;font-weight:600}.prw{font-size:14px;font-weight:800;color:#00aaff}
+        .badge-grid{display:flex;flex-wrap:wrap;gap:10px}
+        .badge{width:56px;height:56px;border-radius:14px;background:rgba(0,40,120,0.15);border:1px solid rgba(0,100,255,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;opacity:0.3}
+        .badge.earned{opacity:1;border-color:rgba(0,170,255,0.4);box-shadow:0 0 20px rgba(0,100,255,0.15)}
+
+        /* SUCHE */
+        .sb{width:100%;padding:14px 18px;background:rgba(0,30,80,0.15);border:1px solid rgba(0,100,255,0.2);border-radius:14px;color:#fff;font-size:15px;font-family:inherit;outline:none;margin-bottom:16px}
+        .sb::placeholder{color:rgba(255,255,255,0.2)}
+        .sb:focus{border-color:rgba(0,170,255,0.5)}
+        .mc2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+        .mch{padding:7px 14px;border-radius:20px;background:rgba(0,40,100,0.15);border:1px solid rgba(0,80,200,0.2);font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s}
+        .mch.ac{background:rgba(0,80,200,0.3);border-color:rgba(0,170,255,0.5);color:#00aaff}
+        .ec{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(0,30,80,0.1);border:1px solid rgba(0,80,200,0.1);border-radius:12px;margin-bottom:8px}
+        .eci{width:44px;height:44px;border-radius:10px;background:rgba(0,60,160,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+        .ecn{font-size:15px;font-weight:600}.ecm{font-size:12px;color:rgba(0,180,255,0.6);margin-top:2px}
+
+        /* WORKOUT */
+        .wt-btn{width:100%;padding:18px;background:linear-gradient(135deg,#0044bb,#0077ff);border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:20px}
+        .wt-btn:active{transform:scale(0.97)}
+        .tpl{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(0,30,80,0.1);border:1px solid rgba(0,80,200,0.1);border-radius:12px;margin-bottom:8px;cursor:pointer}
+        .tpl:active{background:rgba(0,50,120,0.2)}
+        .tpl-name{font-size:15px;font-weight:600}.tpl-info{font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px}
+
+        /* VOL RECHNER */
+        .vbi{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+        .vbl{width:80px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-align:right;flex-shrink:0}
+        .vbbg{flex:1;height:28px;background:rgba(0,30,80,0.15);border-radius:8px;overflow:hidden}
+        .vbf{height:100%;background:linear-gradient(90deg,#0044bb,#00aaff);border-radius:8px;transition:width .6s ease}
+        .vbv{width:55px;font-size:13px;font-weight:700;color:#00aaff;text-align:right}
+        .vol-total{text-align:center;padding:24px;background:rgba(0,40,120,0.1);border:1px solid rgba(0,100,255,0.15);border-radius:16px;margin-top:20px}
+        .vol-total .big{font-size:42px;font-weight:900;color:#00aaff}
+        .vol-total .lbl{font-size:12px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+        /* WORKOUT SELECTOR SHEET */
+        #ws{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .3s}
+        #ws.show{opacity:1;pointer-events:auto}
+        .wsc{width:100%;max-height:75vh;background:linear-gradient(165deg,rgba(8,18,42,0.98),rgba(4,10,28,0.99));border-radius:20px 20px 0 0;padding:20px;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.3,0.64,1)}
+        #ws.show .wsc{transform:translateY(0)}
+        .wsc h3{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center}
+        .wsi{padding:16px;background:rgba(0,40,100,0.12);border:1px solid rgba(0,80,200,0.15);border-radius:12px;margin-bottom:8px;cursor:pointer;font-size:15px;font-weight:600;text-align:center;transition:all .2s}
+        .wsi:active{background:rgba(0,80,200,0.25);transform:scale(0.97)}
+
+        /* ACTIVE WORKOUT */
+        #aw{position:fixed;top:0;left:0;right:0;bottom:0;z-index:190;background:rgba(2,4,14,0.98);display:none;flex-direction:column}
+        #aw.show{display:flex}
+        .awh{display:flex;justify-content:space-between;align-items:center;padding:max(env(safe-area-inset-top),14px) 20px 14px;border-bottom:1px solid rgba(0,80,200,0.15)}
+        .awt{font-size:18px;font-weight:700}.awtm{font-size:22px;font-weight:800;color:#00aaff;font-variant-numeric:tabular-nums}
+        .awb{flex:1;overflow-y:auto;padding:16px 20px;-webkit-overflow-scrolling:touch}
+        .awe{margin-bottom:20px}
+        .awen{font-size:16px;font-weight:700;margin-bottom:4px}.awem{font-size:12px;color:rgba(0,180,255,0.6);margin-bottom:10px}
+        .awsr{display:flex;flex-wrap:wrap;gap:8px}
+        .aws{display:flex;background:rgba(0,40,100,0.15);border:1px solid rgba(0,80,200,0.2);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+        .aws.done{background:rgba(0,100,200,0.3);border-color:rgba(0,170,255,0.5)}
+        .aws .wk,.aws .wr{padding:8px 12px;font-size:14px;font-weight:600}
+        .aws .wk{border-right:1px solid rgba(0,80,200,0.2);color:rgba(255,255,255,0.8)}
+        .aws .wr{color:rgba(255,255,255,0.5)}
+        .aws.done .wk,.aws.done .wr{color:#fff}
+        .awf{padding:16px 20px max(env(safe-area-inset-bottom),16px);border-top:1px solid rgba(0,80,200,0.15)}
+        .fin-btn{width:100%;padding:16px;background:linear-gradient(135deg,#00aa44,#00cc66);border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer}
+        .fin-btn:active{transform:scale(0.97)}
+
+        /* DETAIL POPUP */
         #det{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s}
         #det.show{opacity:1;pointer-events:auto}
-        .dc{position:relative;width:92%;max-width:420px;max-height:82vh;background:linear-gradient(165deg,rgba(8,18,42,0.96),rgba(4,10,28,0.98));border:1px solid rgba(0,120,255,0.25);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,100,255,0.12),inset 0 1px 0 rgba(0,150,255,0.1);transform:scale(0.92) translateY(20px);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1)}
+        .dc{position:relative;width:92%;max-width:420px;max-height:82vh;background:linear-gradient(165deg,rgba(8,18,42,0.96),rgba(4,10,28,0.98));border:1px solid rgba(0,120,255,0.25);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,100,255,0.12);transform:scale(0.92) translateY(20px);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1)}
         #det.show .dc{transform:scale(1) translateY(0)}
-        .dc::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:20px;background:linear-gradient(135deg,rgba(0,150,255,0.3),transparent 30%,transparent 70%,rgba(0,100,255,0.2));pointer-events:none;z-index:0}
-        .dh{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid rgba(0,100,255,0.15)}
-        .dhl{display:flex;align-items:center;gap:12px}
-        .dhi{display:flex;gap:8px}
-        .dhi button{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:4px}
-        .dhi button svg{width:18px;height:18px}
+        .dh{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid rgba(0,100,255,0.15)}
         .dt{font-size:20px;font-weight:700}.dd{font-size:13px;color:rgba(255,255,255,0.4)}
         .dx{background:none;border:none;color:rgba(255,255,255,0.5);font-size:28px;cursor:pointer;padding:0 4px;line-height:1}
-        .db{position:relative;z-index:1;flex:1;overflow-y:auto;padding:8px 16px 20px;-webkit-overflow-scrolling:touch}
+        .db{flex:1;overflow-y:auto;padding:8px 16px 20px;-webkit-overflow-scrolling:touch}
         .db::-webkit-scrollbar{width:3px}.db::-webkit-scrollbar-thumb{background:rgba(0,150,255,0.3);border-radius:3px}
         .ex{padding:14px 0;border-bottom:1px solid rgba(0,80,180,0.15)}.ex:last-child{border-bottom:none}
         .et{display:flex;align-items:center;gap:12px;margin-bottom:10px}
@@ -51,7 +121,7 @@
         .sk,.sx{padding:6px 10px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.75)}
         .sk{border-right:1px solid rgba(0,100,200,0.2)}.sx{color:rgba(255,255,255,0.5)}
 
-        /* Milestone */
+        /* MILESTONE */
         #ms{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .4s}
         #ms.show{opacity:1;pointer-events:auto}
         .mc{background:linear-gradient(135deg,rgba(0,80,200,0.15),rgba(0,150,255,0.08));border:1px solid rgba(0,170,255,0.3);border-radius:24px;padding:40px;text-align:center;max-width:300px;transform:scale(0.8);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1)}
@@ -62,18 +132,17 @@
 
         @keyframes cf{0%{transform:translateY(-10vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
         .cf{position:fixed;z-index:299;pointer-events:none;animation:cf 3s ease-in forwards}
-        .hint{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.18);font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:15;animation:ph 2.5s infinite}
-        @keyframes ph{0%,100%{opacity:.15}50%{opacity:.4}}
 
-        /* Loading */
-        #loader{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .6s}
+        /* LOADING */
+        #loader{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .6s}
         #loader.done{opacity:0;pointer-events:none}
         .loader-ring{width:40px;height:40px;border:3px solid rgba(0,170,255,0.15);border-top:3px solid #00aaff;border-radius:50%;animation:spin 1s linear infinite}
+        .loader-txt{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase}
         @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
 <body>
-    <div id="loader"><div class="loader-ring"></div></div>
+    <div id="loader"><div class="loader-ring"></div><div class="loader-txt">BeOnTrack</div></div>
     <div id="c"></div>
 
     <div id="top-bar">
@@ -85,6 +154,45 @@
     <button id="fab">+</button>
     <div class="hint">Workout antippen</div>
 
+    <!-- PROFIL TAB -->
+    <div class="tab-view" id="v-profil">
+        <div class="vh">Profil</div>
+        <div class="sg">
+            <div class="sc"><div class="sv2" id="p-total">0</div><div class="sl2">Workouts</div></div>
+            <div class="sc"><div class="sv2" id="p-streak">0</div><div class="sl2">Streak</div></div>
+            <div class="sc"><div class="sv2" id="p-vol">0t</div><div class="sl2">Volumen</div></div>
+            <div class="sc"><div class="sv2" id="p-avg">0</div><div class="sl2">Avg. Min</div></div>
+        </div>
+        <div class="vh2">Persoenliche Rekorde</div>
+        <div id="p-prs"></div>
+        <div class="vh2">Badges</div>
+        <div class="badge-grid" id="p-badges"></div>
+    </div>
+
+    <!-- SUCHE TAB -->
+    <div class="tab-view" id="v-suche">
+        <div class="vh">Suche</div>
+        <input class="sb" type="text" placeholder="Uebung suchen..." id="s-input">
+        <div class="mc2" id="s-chips"></div>
+        <div id="s-results"></div>
+    </div>
+
+    <!-- WORKOUT TAB -->
+    <div class="tab-view" id="v-workout">
+        <div class="vh">Workout</div>
+        <button class="wt-btn" id="w-start">+ Neues Workout starten</button>
+        <div class="vh2">Templates</div>
+        <div id="w-tpl"></div>
+    </div>
+
+    <!-- VOL RECHNER TAB -->
+    <div class="tab-view" id="v-vol">
+        <div class="vh">Volumen Rechner</div>
+        <div class="vh2">Pro Muskelgruppe</div>
+        <div id="vr-bars"></div>
+        <div class="vol-total"><div class="big" id="vr-total">0t</div><div class="lbl">Gesamtvolumen</div></div>
+    </div>
+
     <nav id="bottom-nav">
         <button class="ni" data-t="p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></button>
         <button class="ni" data-t="s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span class="nl">Suche</span></button>
@@ -93,219 +201,186 @@
         <button class="ni" data-t="v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="nl">Vol. Rechner</span></button>
     </nav>
 
+    <!-- DETAIL POPUP -->
     <div id="det"><div class="dc">
-        <div class="dh"><div class="dhl"><div class="dhi">
-            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00-.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
-            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-        </div><div><div class="dt" id="d-t">Workout 1</div><div class="dd" id="d-d"></div></div></div>
+        <div class="dh"><div><div class="dt" id="d-t">Workout</div><div class="dd" id="d-d"></div></div>
         <button class="dx" id="d-x">&times;</button></div>
         <div class="db" id="d-b"></div>
     </div></div>
 
+    <!-- WORKOUT SELECTOR -->
+    <div id="ws"><div class="wsc">
+        <h3>Workout waehlen</h3>
+        <div id="ws-list"></div>
+    </div></div>
+
+    <!-- ACTIVE WORKOUT -->
+    <div id="aw">
+        <div class="awh"><div class="awt" id="aw-t"></div><div class="awtm" id="aw-tm">00:00</div></div>
+        <div class="awb" id="aw-b"></div>
+        <div class="awf"><button class="fin-btn" id="aw-fin">Workout beenden</button></div>
+    </div>
+
+    <!-- MILESTONE -->
     <div id="ms"><div class="mc"><h2 id="m-t"></h2><p id="m-p"></p><button onclick="document.getElementById('ms').classList.remove('show')">Weiter!</button></div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-    // ===== EXERCISES =====
+    /* ===== EXERCISES ===== */
     const EX={
-        'BRUST, TRIZEPS':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[60,10],[60,10],[60,10]]},{n:'Kabelzug-Ueberkreuzen',m:'Brust',i:'🔗',s:[[60,10],[60,10],[100,10],[60,10]]},{n:'Liegestuetze',m:'Brust',i:'💪',s:[[30,10],[20,1],[20,10]]},{n:'Pushdown',m:'Trizeps',i:'🏗️',s:[[50,10],[50,10],[50,10]]},{n:'Trizeps Kickbacks',m:'Trizeps',i:'🦾',s:[[50,10],[50,10],[50,10]]}],
-        'RUECKEN, BIZEPS':[{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,12],[0,10],[0,8]]},{n:'Langhantel-Rudern',m:'Ruecken',i:'🏋️',s:[[70,10],[70,10],[80,8]]},{n:'Latzug',m:'Ruecken',i:'🔗',s:[[60,12],[65,10],[70,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[15,12],[15,12],[17,10]]},{n:'Hammercurls',m:'Bizeps',i:'🔨',s:[[14,12],[14,12],[16,10]]}],
-        'BEINE, SCHULTERN':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[80,10],[90,8],[100,6]]},{n:'Beinpresse',m:'Beine',i:'🏗️',s:[[150,12],[170,10],[190,8]]},{n:'Ausfallschritte',m:'Beine',i:'🚶',s:[[20,12],[20,12],[25,10]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[40,10],[40,10],[45,8]]},{n:'Seitheben',m:'Schultern',i:'🦅',s:[[10,15],[12,12],[12,12]]}],
-        'PUSH DAY':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[70,8],[75,6],[80,5]]},{n:'Schraegbank',m:'Brust',i:'📐',s:[[50,10],[55,8],[60,8]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[35,10],[40,8],[40,8]]},{n:'Seitheben',m:'Schultern',i:'🦅',s:[[10,15],[12,12]]},{n:'Trizeps Dips',m:'Trizeps',i:'💪',s:[[0,12],[0,10],[10,8]]}],
-        'PULL DAY':[{n:'Kreuzheben',m:'Ruecken',i:'🏋️',s:[[100,8],[110,6],[120,5]]},{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,10],[0,8],[10,6]]},{n:'Kabelrudern',m:'Ruecken',i:'🔗',s:[[60,12],[65,10],[70,10]]},{n:'Face Pulls',m:'Schultern',i:'🎯',s:[[25,15],[25,15],[30,12]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[15,12],[17,10],[17,10]]}],
-        'LEG DAY':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[90,8],[100,6],[110,5]]},{n:'Rum. Kreuzheben',m:'Beine',i:'🏋️',s:[[80,10],[85,8],[90,8]]},{n:'Beinpresse',m:'Beine',i:'🏗️',s:[[160,12],[180,10],[200,8]]},{n:'Beinbeuger',m:'Beine',i:'🦿',s:[[50,12],[55,10],[60,10]]},{n:'Wadenheben',m:'Waden',i:'🦶',s:[[80,15],[90,12],[100,12]]}],
-        'CARDIO':[{n:'Laufband',m:'Cardio',i:'🏃',s:[[0,30]]},{n:'Rudergeraet',m:'Cardio',i:'🚣',s:[[0,15]]},{n:'Fahrrad',m:'Cardio',i:'🚴',s:[[0,20]]}],
-        'HIIT':[{n:'Burpees',m:'Ganzkoerper',i:'⚡',s:[[0,15],[0,12],[0,10]]},{n:'Box Jumps',m:'Beine',i:'📦',s:[[0,12],[0,12],[0,10]]},{n:'Battle Ropes',m:'Arme',i:'🪢',s:[[0,30],[0,30],[0,30]]},{n:'Kettlebell Swings',m:'Ganzkoerper',i:'🔔',s:[[24,15],[24,15],[24,12]]}],
-        'OBERKOERPER':[{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[65,10],[70,8],[75,6]]},{n:'LH-Rudern',m:'Ruecken',i:'🏋️',s:[[60,10],[65,8],[70,8]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[35,10],[40,8],[40,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'💪',s:[[14,12],[14,12],[16,10]]},{n:'Pushdown',m:'Trizeps',i:'🏗️',s:[[45,12],[50,10],[50,10]]}],
-        'GANZKOERPER':[{n:'Kniebeugen',m:'Beine',i:'🦵',s:[[70,10],[80,8],[80,8]]},{n:'Bankdruecken',m:'Brust',i:'🏋️',s:[[60,10],[65,8],[70,8]]},{n:'Klimmzuege',m:'Ruecken',i:'🧗',s:[[0,10],[0,8],[0,6]]},{n:'Schulterdruecken',m:'Schultern',i:'🏋️',s:[[30,10],[35,8],[35,8]]},{n:'Planke',m:'Core',i:'🧘',s:[[0,60],[0,45],[0,45]]}]
+        'BRUST, TRIZEPS':[{n:'Bankdruecken',m:'Brust',i:'\u{1F3CB}',s:[[80,10],[80,10],[85,8]]},{n:'Schraegbank',m:'Brust',i:'\u{1F4D0}',s:[[50,10],[55,8],[60,8]]},{n:'Kabelzug Crossover',m:'Brust',i:'\u{1F517}',s:[[20,12],[22,10],[25,10]]},{n:'Trizeps Pushdown',m:'Trizeps',i:'\u{1F4AA}',s:[[40,12],[45,10],[50,10]]},{n:'Trizeps Dips',m:'Trizeps',i:'\u{1F9BE}',s:[[0,12],[0,10],[10,8]]}],
+        'RUECKEN, BIZEPS':[{n:'Klimmzuege',m:'Ruecken',i:'\u{1F9D7}',s:[[0,12],[0,10],[0,8]]},{n:'LH-Rudern',m:'Ruecken',i:'\u{1F3CB}',s:[[70,10],[75,8],[80,8]]},{n:'Latzug',m:'Ruecken',i:'\u{1F517}',s:[[60,12],[65,10],[70,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'\u{1F4AA}',s:[[15,12],[17,10],[17,10]]},{n:'Hammercurls',m:'Bizeps',i:'\u{1F528}',s:[[14,12],[16,10],[16,10]]}],
+        'BEINE, SCHULTERN':[{n:'Kniebeugen',m:'Beine',i:'\u{1F9B5}',s:[[90,8],[100,6],[110,5]]},{n:'Beinpresse',m:'Beine',i:'\u{1F3D7}',s:[[160,12],[180,10],[200,8]]},{n:'Ausfallschritte',m:'Beine',i:'\u{1F6B6}',s:[[20,12],[25,10],[25,10]]},{n:'Schulterdruecken',m:'Schultern',i:'\u{1F3CB}',s:[[40,10],[45,8],[45,8]]},{n:'Seitheben',m:'Schultern',i:'\u{1F985}',s:[[10,15],[12,12],[12,12]]}],
+        'PUSH DAY':[{n:'Bankdruecken',m:'Brust',i:'\u{1F3CB}',s:[[75,8],[80,6],[85,5]]},{n:'Schraegbank',m:'Brust',i:'\u{1F4D0}',s:[[55,10],[60,8],[60,8]]},{n:'Schulterdruecken',m:'Schultern',i:'\u{1F3CB}',s:[[40,10],[42,8],[45,8]]},{n:'Seitheben',m:'Schultern',i:'\u{1F985}',s:[[12,15],[12,12]]},{n:'Trizeps Dips',m:'Trizeps',i:'\u{1F4AA}',s:[[0,12],[10,10],[10,8]]}],
+        'PULL DAY':[{n:'Kreuzheben',m:'Ruecken',i:'\u{1F3CB}',s:[[100,8],[110,6],[120,5]]},{n:'Klimmzuege',m:'Ruecken',i:'\u{1F9D7}',s:[[0,10],[0,8],[10,6]]},{n:'Kabelrudern',m:'Ruecken',i:'\u{1F517}',s:[[55,12],[60,10],[65,10]]},{n:'Face Pulls',m:'Schultern',i:'\u{1F3AF}',s:[[25,15],[25,15],[30,12]]},{n:'Bizeps Curls',m:'Bizeps',i:'\u{1F4AA}',s:[[15,12],[17,10],[17,10]]}],
+        'LEG DAY':[{n:'Kniebeugen',m:'Beine',i:'\u{1F9B5}',s:[[100,8],[110,6],[120,5]]},{n:'Rum. Kreuzheben',m:'Beine',i:'\u{1F3CB}',s:[[80,10],[90,8],[95,8]]},{n:'Beinpresse',m:'Beine',i:'\u{1F3D7}',s:[[180,12],[200,10],[220,8]]},{n:'Beinbeuger',m:'Beine',i:'\u{1F9BF}',s:[[50,12],[55,10],[60,10]]},{n:'Wadenheben',m:'Waden',i:'\u{1F9B6}',s:[[90,15],[100,12],[110,12]]}],
+        'OBERKOERPER':[{n:'Bankdruecken',m:'Brust',i:'\u{1F3CB}',s:[[70,10],[75,8],[80,6]]},{n:'LH-Rudern',m:'Ruecken',i:'\u{1F3CB}',s:[[65,10],[70,8],[75,8]]},{n:'Schulterdruecken',m:'Schultern',i:'\u{1F3CB}',s:[[35,10],[40,8],[42,8]]},{n:'Bizeps Curls',m:'Bizeps',i:'\u{1F4AA}',s:[[14,12],[16,10],[16,10]]},{n:'Pushdown',m:'Trizeps',i:'\u{1F3D7}',s:[[40,12],[45,10],[50,10]]}],
+        'GANZKOERPER':[{n:'Kniebeugen',m:'Beine',i:'\u{1F9B5}',s:[[80,10],[90,8],[90,8]]},{n:'Bankdruecken',m:'Brust',i:'\u{1F3CB}',s:[[65,10],[70,8],[75,8]]},{n:'Klimmzuege',m:'Ruecken',i:'\u{1F9D7}',s:[[0,10],[0,8],[0,6]]},{n:'Schulterdruecken',m:'Schultern',i:'\u{1F3CB}',s:[[35,10],[38,8],[40,8]]},{n:'Planke',m:'Core',i:'\u{1F9D8}',s:[[0,60],[0,45],[0,45]]}]
     };
 
-    // ===== DATA =====
-    const MS=[1,5,10,25,50,75,100,150,200,365];
+    /* ===== DATA ===== */
+    const MILE=[1,5,10,25,50,75,100,150,200,365];
     const TY=Object.keys(EX);
-    let D=JSON.parse(localStorage.getItem('bot4')||'null')||{w:[]};
-    let MR=JSON.parse(localStorage.getItem('bot4m')||'[]');
-    if(!D.w.length){for(let i=14;i>=0;i--)if(Math.random()>.3)D.w.push({d:new Date(Date.now()-i*864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'done',du:40+(Math.random()*50|0)});D.w.push({d:new Date(Date.now()+864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'planned',du:0});MS.forEach(m=>{if(D.w.length>=m)MR.push(m)});sv();}
-    function sv(){localStorage.setItem('bot4',JSON.stringify(D));localStorage.setItem('bot4m',JSON.stringify(MR))}
+    let D=JSON.parse(localStorage.getItem('bot5')||'null')||{w:[]};
+    let MR=JSON.parse(localStorage.getItem('bot5m')||'[]');
+    if(!D.w.length){
+        for(let i=14;i>=0;i--)if(Math.random()>.3)D.w.push({d:new Date(Date.now()-i*864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'done',du:35+(Math.random()*50|0)});
+        D.w.push({d:new Date(Date.now()+864e5).toISOString(),t:TY[Math.random()*TY.length|0],s:'planned',du:0});
+        MILE.forEach(m=>{if(D.w.filter(w=>w.s==='done').length>=m)MR.push(m)});sv();
+    }
+    function sv(){localStorage.setItem('bot5',JSON.stringify(D));localStorage.setItem('bot5m',JSON.stringify(MR))}
     function stk(){let s=0,c=new Date().setHours(0,0,0,0);const ds=[...new Set(D.w.filter(w=>w.s==='done').map(w=>new Date(w.d).setHours(0,0,0,0)))].sort((a,b)=>b-a);for(const d of ds){if(d===c||d===c-864e5){s++;c=d}else if(d<c-864e5)break}return s}
     function fd(iso){return new Date(iso).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}
     function vol(){let v=0;D.w.filter(w=>w.s==='done').forEach(w=>{(EX[w.t]||[]).forEach(e=>e.s.forEach(s=>{v+=s[0]*s[1]}))});return(v/1000).toFixed(1)}
 
-    // ===== THREE.JS =====
+    /* ===== THREE.JS SCENE ===== */
+    const V2=THREE.Vector2;
     const ct=document.getElementById('c');
     const sc=new THREE.Scene();
-    sc.fog=new THREE.FogExp2(0x000510,0.028);
-    const cam=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,120);
-    cam.position.set(0,3.2,6.5);cam.lookAt(0,1.0,-3);
+    sc.fog=new THREE.FogExp2(0x000510,0.022);
+    const cam=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,150);
+    cam.position.set(0,2.4,6.8);cam.lookAt(0,0.9,-4);
     const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
     R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,2));
-    R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;
+    R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;
     ct.appendChild(R.domElement);
 
-    // === LIGHTS ===
-    // Big blue back glow
-    const bl=new THREE.PointLight(0x0066ff,12,40);bl.position.set(0,10,-22);sc.add(bl);
-    // Side fills
-    const sl=new THREE.PointLight(0x0044cc,5,25);sl.position.set(-5,5,-14);sc.add(sl);
-    const sr2=new THREE.PointLight(0x0088ff,5,25);sr2.position.set(5,5,-14);sc.add(sr2);
-    // Rim from behind
-    const rl=new THREE.SpotLight(0x0077ff,6,20,Math.PI/3,0.5);
-    rl.position.set(0,7,-6);rl.target.position.set(0,1,1);sc.add(rl);sc.add(rl.target);
-    // Subtle ambient
-    sc.add(new THREE.AmbientLight(0x001122,0.4));
-    // Floor glow
-    const fl=new THREE.PointLight(0x002266,4,12);fl.position.set(0,0.05,-1.5);sc.add(fl);
+    /* === LIGHTS === */
+    const bl=new THREE.PointLight(0x0066ff,14,45);bl.position.set(0,8,-20);sc.add(bl);
+    sc.add(Object.assign(new THREE.PointLight(0x0044cc,5,25),{position:new THREE.Vector3(-6,5,-12)}));
+    sc.add(Object.assign(new THREE.PointLight(0x0088ff,5,25),{position:new THREE.Vector3(6,5,-12)}));
+    const rl=new THREE.SpotLight(0x0077ff,8,25,Math.PI/3,0.5);rl.position.set(0,8,-5);rl.target.position.set(0,1,2);sc.add(rl);sc.add(rl.target);
+    sc.add(new THREE.AmbientLight(0x001122,0.3));
+    const flLight=new THREE.PointLight(0x002266,4,12);flLight.position.set(0,0.05,-1.5);sc.add(flLight);
 
-    // === BACKGROUND GRADIENT ===
-    // Blue gradient sphere
-    const bgGeo=new THREE.SphereGeometry(50,32,32);
-    const bgMat=new THREE.ShaderMaterial({
-        side:THREE.BackSide,
-        uniforms:{},
-        vertexShader:`varying vec3 vPos;void main(){vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-        fragmentShader:`varying vec3 vPos;void main(){float d=length(vPos.xz)/50.0;float y=(vPos.y+50.0)/100.0;vec3 dark=vec3(0.0,0.01,0.04);vec3 blue=vec3(0.0,0.15,0.45);float f=smoothstep(0.0,0.6,y)*smoothstep(0.8,0.0,d);gl_FragColor=vec4(mix(dark,blue,f*0.7),1.0);}`
+    /* === BACKGROUND === */
+    const bgGeo=new THREE.SphereGeometry(60,32,32);
+    const bgMat=new THREE.ShaderMaterial({side:THREE.BackSide,uniforms:{},
+        vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+        fragmentShader:'varying vec3 vP;void main(){float d=length(vP.xz)/60.0;float y=(vP.y+60.0)/120.0;vec3 dk=vec3(0.0,0.005,0.02);vec3 bl=vec3(0.0,0.18,0.55);float g=smoothstep(0.35,0.65,y)*smoothstep(0.45,0.0,d)*smoothstep(0.85,0.5,y);gl_FragColor=vec4(mix(dk,bl,g*0.8),1.0);}'
     });
     sc.add(new THREE.Mesh(bgGeo,bgMat));
 
-    // === GROUND ===
-    const gnd=new THREE.Mesh(new THREE.PlaneGeometry(60,100),new THREE.MeshPhongMaterial({color:0x000a18,specular:0x002244,shininess:120,transparent:true,opacity:0.95}));
+    /* === GROUND === */
+    const gnd=new THREE.Mesh(new THREE.PlaneGeometry(80,120),new THREE.MeshPhongMaterial({color:0x000a18,specular:0x002244,shininess:120,transparent:true,opacity:0.95}));
     gnd.rotation.x=-Math.PI/2;gnd.position.y=-0.02;sc.add(gnd);
-    // Grid
-    const gr=new THREE.GridHelper(60,120,0x001a44,0x000c1a);gr.position.y=0.005;sc.add(gr);
+    const gr=new THREE.GridHelper(80,160,0x001a44,0x000c1a);gr.position.y=0.005;sc.add(gr);
+    const edgeMesh=new THREE.Mesh(new THREE.PlaneGeometry(8,0.04),new THREE.MeshBasicMaterial({color:0x00aaff,transparent:true,opacity:0.6}));
+    edgeMesh.rotation.x=-Math.PI/2;edgeMesh.position.set(0,0.03,3.8);sc.add(edgeMesh);
 
-    // Bright floor edge line (like in screenshot)
-    const edgeGeo=new THREE.PlaneGeometry(8,0.04);
-    const edgeMat=new THREE.MeshBasicMaterial({color:0x00aaff,transparent:true,opacity:0.6});
-    const edge=new THREE.Mesh(edgeGeo,edgeMat);
-    edge.rotation.x=-Math.PI/2;edge.position.set(0,0.03,3.5);sc.add(edge);
+    /* ===== FRESNEL RIM SHADER MATERIAL ===== */
+    const fresnelMat=new THREE.ShaderMaterial({
+        uniforms:{uTime:{value:0}},
+        vertexShader:`
+            varying vec3 vN;varying vec3 vV;
+            void main(){
+                vN=normalize(normalMatrix*normal);
+                vec4 mv=modelViewMatrix*vec4(position,1.0);
+                vV=normalize(-mv.xyz);
+                gl_Position=projectionMatrix*mv;
+            }`,
+        fragmentShader:`
+            uniform float uTime;
+            varying vec3 vN;varying vec3 vV;
+            void main(){
+                float rim=1.0-max(0.0,dot(vN,vV));
+                float f=pow(rim,2.5)*1.6;
+                float pulse=1.0+sin(uTime*0.8)*0.06;
+                vec3 rc=vec3(0.0,0.32,0.95);
+                vec3 base=vec3(0.005,0.008,0.025);
+                gl_FragColor=vec4(base+rc*f*pulse,1.0);
+            }`
+    });
 
-    // ===== 3D HUMAN FIGURE (Smooth LatheGeometry) =====
+    /* ===== 3D FIGURE ===== */
     const fig=new THREE.Group();
-    const FM=new THREE.MeshPhongMaterial({color:0x020610,specular:0x0055cc,shininess:50,emissive:0x000204});
-    // Rim light material (edge glow)
-    const RM=new THREE.MeshPhongMaterial({color:0x010308,specular:0x0088ff,shininess:80,emissive:0x000105,transparent:true,opacity:0.95});
 
-    // Body profile using LatheGeometry for smooth torso
-    const bodyProfile=[
-        new THREE.Vector2(0.00, 0.00),  // bottom center
-        new THREE.Vector2(0.12, 0.00),  // hip center
-        new THREE.Vector2(0.28, 0.05),  // hip wide
-        new THREE.Vector2(0.30, 0.20),  // lower belly
-        new THREE.Vector2(0.28, 0.40),  // waist
-        new THREE.Vector2(0.26, 0.55),  // natural waist
-        new THREE.Vector2(0.30, 0.70),  // ribs
-        new THREE.Vector2(0.34, 0.85),  // chest
-        new THREE.Vector2(0.32, 0.95),  // upper chest
-        new THREE.Vector2(0.28, 1.05),  // shoulders base
-        new THREE.Vector2(0.18, 1.10),  // neck base
-        new THREE.Vector2(0.14, 1.18),  // neck
-        new THREE.Vector2(0.12, 1.25),  // neck top
-        new THREE.Vector2(0.00, 1.25),  // neck center top
-    ];
-    const bodyLathe=new THREE.LatheGeometry(bodyProfile, 24);
-    const bodyMesh=new THREE.Mesh(bodyLathe, FM);
-    bodyMesh.position.y=0.55;
-    fig.add(bodyMesh);
+    // Torso (LatheGeometry with athletic hoodie proportions)
+    const bp=[new V2(0,0),new V2(.15,0),new V2(.29,.04),new V2(.27,.12),new V2(.23,.25),new V2(.24,.35),new V2(.30,.46),new V2(.36,.56),new V2(.42,.65),new V2(.44,.70),new V2(.42,.73),new V2(.22,.78),new V2(.14,.85),new V2(.12,.90),new V2(0,.90)];
+    const torso=new THREE.Mesh(new THREE.LatheGeometry(bp,28),fresnelMat);
+    torso.position.y=0.96;torso.scale.z=0.7;fig.add(torso);
 
     // Head
-    const headGeo=new THREE.SphereGeometry(0.22, 16, 16);
-    const headMesh=new THREE.Mesh(headGeo, FM);
-    headMesh.position.set(0, 2.02, 0);
-    headMesh.scale.set(1, 1.1, 0.95);
-    fig.add(headMesh);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(.19,16,16),fresnelMat);
+    head.position.set(0,1.88,0);head.scale.set(1,1.15,.9);fig.add(head);
 
-    // Hood - larger sphere covering head
-    const hoodGeo=new THREE.SphereGeometry(0.30, 16, 12, 0, Math.PI*2, 0, Math.PI*0.6);
-    const hoodMesh=new THREE.Mesh(hoodGeo, FM);
-    hoodMesh.position.set(0, 2.06, -0.04);
-    hoodMesh.scale.set(1.1, 1.2, 1.3);
-    fig.add(hoodMesh);
+    // Hood
+    const hood=new THREE.Mesh(new THREE.SphereGeometry(.30,16,14,0,Math.PI*2,0,Math.PI*.55),fresnelMat);
+    hood.position.set(0,1.94,-.06);hood.scale.set(1.15,1.2,1.35);fig.add(hood);
 
-    // Hood front rim
-    const rimGeo=new THREE.TorusGeometry(0.27, 0.025, 8, 24, Math.PI*1.1);
-    const rimMesh=new THREE.Mesh(rimGeo, RM);
-    rimMesh.position.set(0, 1.95, 0.12);
-    rimMesh.rotation.x=-0.35;
-    rimMesh.rotation.y=Math.PI*-0.05;
-    fig.add(rimMesh);
+    // Hood rim
+    const hRim=new THREE.Mesh(new THREE.TorusGeometry(.26,.022,8,24,Math.PI*1.1),fresnelMat);
+    hRim.position.set(0,1.86,.10);hRim.rotation.x=-.3;fig.add(hRim);
 
-    // Arms - smooth with LatheGeometry
-    function makeArm(side) {
-        const armGroup=new THREE.Group();
-        // Upper arm
-        const ua=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.1,0.52,10), FM);
-        ua.position.y=-0.26;
-        armGroup.add(ua);
-        // Elbow
-        const elbow=new THREE.Mesh(new THREE.SphereGeometry(0.085,8,8), FM);
-        elbow.position.y=-0.52;
-        armGroup.add(elbow);
-        // Forearm
-        const fa=new THREE.Mesh(new THREE.CylinderGeometry(0.065,0.08,0.48,10), FM);
-        fa.position.set(0,-0.76,0.04);
-        armGroup.add(fa);
-        // Hand
-        const hand=new THREE.Mesh(new THREE.SphereGeometry(0.055,8,8), FM);
-        hand.position.set(0,-1.0,0.06);
-        hand.scale.set(0.9,1.1,0.7);
-        armGroup.add(hand);
+    // Shoulders
+    const shG=new THREE.SphereGeometry(.15,10,10);
+    const lS=new THREE.Mesh(shG,fresnelMat);lS.position.set(-.47,1.66,0);lS.scale.set(1,.85,.8);fig.add(lS);
+    const rS=new THREE.Mesh(shG,fresnelMat);rS.position.set(.47,1.66,0);rS.scale.set(1,.85,.8);fig.add(rS);
 
-        armGroup.position.set(side*0.40, 1.68, 0);
-        armGroup.rotation.z=side*0.08;
-        return armGroup;
+    // Arms
+    function mkArm(s){
+        const g=new THREE.Group();
+        const ua=new THREE.Mesh(new THREE.CylinderGeometry(.095,.085,.42,10),fresnelMat);ua.position.y=-.22;g.add(ua);
+        const el=new THREE.Mesh(new THREE.SphereGeometry(.08,8,8),fresnelMat);el.position.y=-.44;g.add(el);
+        const fa=new THREE.Mesh(new THREE.CylinderGeometry(.07,.06,.38,10),fresnelMat);fa.position.set(0,-.65,.02);g.add(fa);
+        const h=new THREE.Mesh(new THREE.SphereGeometry(.05,8,8),fresnelMat);h.position.set(0,-.86,.04);h.scale.set(.85,1.2,.65);g.add(h);
+        g.position.set(s*.49,1.64,0);g.rotation.z=s*.06;
+        return g;
     }
-    fig.add(makeArm(-1));
-    fig.add(makeArm(1));
+    const armL=mkArm(-1),armR=mkArm(1);fig.add(armL);fig.add(armR);
 
     // Legs
-    function makeLeg(side) {
-        const legGroup=new THREE.Group();
-        // Upper leg
-        const ul=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.12,0.58,10), FM);
-        ul.position.y=-0.29;
-        legGroup.add(ul);
-        // Knee
-        const knee=new THREE.Mesh(new THREE.SphereGeometry(0.095,8,8), FM);
-        knee.position.y=-0.58;
-        legGroup.add(knee);
-        // Lower leg
-        const ll=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.52,10), FM);
-        ll.position.y=-0.84;
-        legGroup.add(ll);
-        // Foot
-        const foot=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.07,0.28), FM);
-        foot.position.set(0,-1.12,0.05);
-        legGroup.add(foot);
-
-        legGroup.position.set(side*0.16, 0.57, 0);
-        legGroup.rotation.z=side*0.02;
-        return legGroup;
+    function mkLeg(s){
+        const g=new THREE.Group();
+        const ul=new THREE.Mesh(new THREE.CylinderGeometry(.14,.11,.48,10),fresnelMat);ul.position.y=-.26;g.add(ul);
+        const kn=new THREE.Mesh(new THREE.SphereGeometry(.095,8,8),fresnelMat);kn.position.y=-.52;g.add(kn);
+        const ll=new THREE.Mesh(new THREE.CylinderGeometry(.085,.065,.44,10),fresnelMat);ll.position.y=-.76;g.add(ll);
+        const ft=new THREE.Mesh(new THREE.BoxGeometry(.13,.06,.27),fresnelMat);ft.position.set(0,-.99,.04);g.add(ft);
+        g.position.set(s*.17,.96,0);g.rotation.z=s*.015;
+        return g;
     }
-    fig.add(makeLeg(-1));
-    fig.add(makeLeg(1));
+    fig.add(mkLeg(-1));fig.add(mkLeg(1));
 
-    // Shoulder caps
-    const shGeo=new THREE.SphereGeometry(0.14,10,10);
-    const lsh=new THREE.Mesh(shGeo,FM);lsh.position.set(-0.40,1.68,0);fig.add(lsh);
-    const rsh=new THREE.Mesh(shGeo,FM);rsh.position.set(0.40,1.68,0);fig.add(rsh);
-
-    fig.position.set(0,-0.55,0.3);
+    fig.position.set(0,.03,.3);
     sc.add(fig);
 
-    // Shadow under figure
-    const shadowGeo=new THREE.CircleGeometry(0.8,32);
-    const shadowMat=new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0.4});
-    const shadow=new THREE.Mesh(shadowGeo,shadowMat);
-    shadow.rotation.x=-Math.PI/2;shadow.position.set(0,0.01,0.3);sc.add(shadow);
+    /* === FIGURE REFLECTION === */
+    const refMat=new THREE.MeshBasicMaterial({color:0x001030,transparent:true,opacity:0.12,blending:THREE.AdditiveBlending,depthWrite:false});
+    const figRef=fig.clone(true);
+    figRef.traverse(ch=>{if(ch.isMesh)ch.material=refMat});
+    figRef.scale.y=-1;figRef.position.set(0,-.03,.3);
+    sc.add(figRef);
 
-    // ===== PANELS =====
+    /* === SHADOW === */
+    const shad=new THREE.Mesh(new THREE.CircleGeometry(.9,32),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0.35}));
+    shad.rotation.x=-Math.PI/2;shad.position.set(0,.01,.3);sc.add(shad);
+
+    /* ===== PANELS ===== */
     let panels=[];
-    const ray=new THREE.Raycaster();
-    const mpos=new THREE.Vector2();
+    const ray=new THREE.Raycaster(),mpos=new THREE.Vector2();
 
     function mkTex(t1,t2,t3,cur){
-        const c=document.createElement('canvas');c.width=512;c.height=160;
-        const x=c.getContext('2d');
+        const c=document.createElement('canvas');c.width=512;c.height=160;const x=c.getContext('2d');
         x.fillStyle='rgba(0,8,24,0.6)';x.fillRect(0,0,512,160);
         const bc=cur?'rgba(0,150,255,0.5)':'rgba(0,80,200,0.2)';
         x.strokeStyle=bc;x.lineWidth=2;x.strokeRect(2,2,508,156);
@@ -330,12 +405,11 @@
             const tex=new THREE.CanvasTexture(mkTex(w.t,w.s==='planned'?'Workout geplant':'Workout abgeschlossen',fd(w.d),cur));
             tex.minFilter=THREE.LinearFilter;
             const geo=new THREE.PlaneGeometry(3.4,1.05);
-            const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:cur?1:Math.max(0.1,0.85-i*0.065),side:THREE.DoubleSide});
+            const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:cur?1:Math.max(0.1,0.85-i*0.06),side:THREE.DoubleSide});
             const mesh=new THREE.Mesh(geo,mat);
             const z=-1.8-i*1.9;
             mesh.position.set(0,0.025,z);mesh.rotation.x=-Math.PI/2;
-            mesh.userData={idx:D.w.length-1-i};
-            sc.add(mesh);
+            mesh.userData={idx:D.w.length-1-i};sc.add(mesh);
             let glow=null,ref=null;
             if(i<6){
                 const gm=new THREE.MeshBasicMaterial({color:cur?0x0088ff:0x002255,transparent:true,opacity:cur?0.2:0.05,side:THREE.DoubleSide});
@@ -348,25 +422,25 @@
     }
     buildP();
 
-    // Particles
+    /* === PARTICLES === */
     const PC=150;const pG=new THREE.BufferGeometry();const pP=new Float32Array(PC*3);
     for(let i=0;i<PC;i++){pP[i*3]=(Math.random()-.5)*30;pP[i*3+1]=Math.random()*12;pP[i*3+2]=(Math.random()-.5)*50-5;}
     pG.setAttribute('position',new THREE.BufferAttribute(pP,3));
     sc.add(new THREE.Points(pG,new THREE.PointsMaterial({color:0x0055aa,size:0.04,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false})));
 
-    // Volumetric light rays
+    /* === LIGHT RAYS === */
     for(let i=0;i<8;i++){
-        const rm=new THREE.MeshBasicMaterial({color:0x0055cc,transparent:true,opacity:0.02+Math.random()*0.025,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,depthWrite:false});
-        const r=new THREE.Mesh(new THREE.PlaneGeometry(0.15+Math.random()*0.5,20),rm);
-        r.position.set((Math.random()-.5)*8,6,-16+Math.random()*6);r.rotation.z=(Math.random()-.5)*0.4;sc.add(r);
+        const rm=new THREE.MeshBasicMaterial({color:0x0055cc,transparent:true,opacity:0.02+Math.random()*.025,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,depthWrite:false});
+        const r=new THREE.Mesh(new THREE.PlaneGeometry(.15+Math.random()*.5,20),rm);
+        r.position.set((Math.random()-.5)*8,6,-16+Math.random()*6);r.rotation.z=(Math.random()-.5)*.4;sc.add(r);
     }
 
-    // ===== INPUT =====
+    /* ===== INPUT ===== */
     let sY=0,tS=0,drag=false,dY=0,vel=0,pdt=0,pdp={x:0,y:0};
     R.domElement.addEventListener('pointerdown',e=>{drag=true;dY=e.clientY;vel=0;pdt=Date.now();pdp={x:e.clientX,y:e.clientY}});
-    R.domElement.addEventListener('pointermove',e=>{if(!drag)return;const dy=e.clientY-dY;tS-=dy*0.013;vel=-dy*0.013;dY=e.clientY});
+    R.domElement.addEventListener('pointermove',e=>{if(!drag)return;const dy=e.clientY-dY;tS-=dy*.013;vel=-dy*.013;dY=e.clientY});
     R.domElement.addEventListener('pointerup',e=>{drag=false;if(Date.now()-pdt<300&&Math.hypot(e.clientX-pdp.x,e.clientY-pdp.y)<15)tap(e.clientX,e.clientY)});
-    R.domElement.addEventListener('wheel',e=>{e.preventDefault();tS+=e.deltaY*0.006},{passive:false});
+    R.domElement.addEventListener('wheel',e=>{e.preventDefault();tS+=e.deltaY*.006},{passive:false});
 
     function tap(sx,sy){
         mpos.x=(sx/innerWidth)*2-1;mpos.y=-(sy/innerHeight)*2+1;
@@ -375,11 +449,121 @@
         if(h.length>0)openDet(h[0].object.userData.idx);
     }
 
-    // ===== DETAIL =====
+    /* ===== TAB SWITCHING ===== */
+    let curTab='t';
+    const tabMap={p:'v-profil',s:'v-suche',w:'v-workout',v:'v-vol'};
+
+    function switchTab(t){
+        curTab=t;
+        document.querySelectorAll('.tab-view').forEach(v=>v.classList.remove('active'));
+        if(tabMap[t])document.getElementById(tabMap[t]).classList.add('active');
+        document.querySelectorAll('.ni').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+        const isT=t==='t';
+        document.getElementById('fab').style.display=isT?'flex':'none';
+        document.querySelector('.hint').style.display=isT?'block':'none';
+        document.getElementById('top-bar').style.display=isT?'flex':'none';
+        if(t==='p')updProfil();if(t==='s')updSuche();if(t==='w')updWorkout();if(t==='v')updVol();
+    }
+
+    document.querySelectorAll('.ni').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
+
+    /* ===== PROFIL ===== */
+    function updProfil(){
+        const done=D.w.filter(w=>w.s==='done');
+        document.getElementById('p-total').textContent=done.length;
+        document.getElementById('p-streak').textContent=stk();
+        document.getElementById('p-vol').textContent=vol()+'t';
+        document.getElementById('p-avg').textContent=done.length?Math.round(done.reduce((s,w)=>s+(w.du||0),0)/done.length)+'m':'0';
+        const prs={};
+        done.forEach(w=>{(EX[w.t]||[]).forEach(e=>{const mx=Math.max(...e.s.map(s=>s[0]));if(!prs[e.n]||mx>prs[e.n])prs[e.n]=mx})});
+        document.getElementById('p-prs').innerHTML=Object.entries(prs).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n,w])=>`<div class="pri"><span class="prn">${n}</span><span class="prw">${w} kg</span></div>`).join('');
+        const badges=[{e:'\u{1F31F}',r:1,l:'Erster!'},{e:'\u{1F525}',r:5,l:'5er Streak'},{e:'\u{1F4AA}',r:10,l:'10 Workouts'},{e:'\u{1F3C6}',r:25,l:'25 Workouts'},{e:'\u{1F48E}',r:50,l:'50 Workouts'},{e:'\u{1F451}',r:100,l:'100 Workouts'}];
+        document.getElementById('p-badges').innerHTML=badges.map(b=>`<div class="badge${done.length>=b.r?' earned':''}" title="${b.l}">${b.e}</div>`).join('');
+    }
+
+    /* ===== SUCHE ===== */
+    let sFilter='';
+    function updSuche(q){
+        if(q===undefined)q=document.getElementById('s-input').value;
+        const all=[];Object.entries(EX).forEach(([t,exs])=>exs.forEach(e=>{if(!all.find(x=>x.n===e.n))all.push(e)}));
+        const muscles=[...new Set(all.map(e=>e.m))];
+        document.getElementById('s-chips').innerHTML=muscles.map(m=>`<div class="mch${sFilter===m?' ac':''}" data-m="${m}">${m}</div>`).join('');
+        document.querySelectorAll('.mch').forEach(c=>c.addEventListener('click',()=>{sFilter=sFilter===c.dataset.m?'':c.dataset.m;updSuche(q)}));
+        let filt=all;
+        if(q)filt=filt.filter(e=>e.n.toLowerCase().includes(q.toLowerCase())||e.m.toLowerCase().includes(q.toLowerCase()));
+        if(sFilter)filt=filt.filter(e=>e.m===sFilter);
+        document.getElementById('s-results').innerHTML=filt.map(e=>`<div class="ec"><div class="eci">${e.i}</div><div><div class="ecn">${e.n}</div><div class="ecm">${e.m}</div></div></div>`).join('');
+    }
+    document.getElementById('s-input').addEventListener('input',e=>updSuche(e.target.value));
+
+    /* ===== WORKOUT ===== */
+    function updWorkout(){
+        document.getElementById('w-tpl').innerHTML=TY.map(t=>{
+            const exs=EX[t];const cnt=exs.length;
+            return `<div class="tpl" data-t="${t}"><div><div class="tpl-name">${t}</div><div class="tpl-info">${cnt} Uebungen</div></div></div>`;
+        }).join('');
+        document.querySelectorAll('.tpl').forEach(t=>t.addEventListener('click',()=>startWO(t.dataset.t)));
+    }
+
+    document.getElementById('w-start').addEventListener('click',showWS);
+    document.getElementById('fab').addEventListener('click',showWS);
+
+    function showWS(){
+        document.getElementById('ws-list').innerHTML=TY.map(t=>`<div class="wsi" data-t="${t}">${t}</div>`).join('');
+        document.querySelectorAll('.wsi').forEach(w=>w.addEventListener('click',()=>{document.getElementById('ws').classList.remove('show');startWO(w.dataset.t)}));
+        document.getElementById('ws').classList.add('show');
+    }
+    document.getElementById('ws').addEventListener('click',e=>{if(e.target.id==='ws')document.getElementById('ws').classList.remove('show')});
+
+    /* === ACTIVE WORKOUT === */
+    let awData=null,awTimer=null,awSec=0;
+
+    function startWO(type){
+        awData={type,exs:EX[type].map(e=>({...e,sets:e.s.map(s=>({w:s[0],r:s[1],done:false}))}))};
+        awSec=0;
+        document.getElementById('aw-t').textContent=type;
+        renderAW();
+        document.getElementById('aw').classList.add('show');
+        awTimer=setInterval(()=>{awSec++;document.getElementById('aw-tm').textContent=Math.floor(awSec/60).toString().padStart(2,'0')+':'+String(awSec%60).padStart(2,'0')},1000);
+    }
+
+    function renderAW(){
+        document.getElementById('aw-b').innerHTML=awData.exs.map((e,ei)=>`
+            <div class="awe"><div class="awen">${e.i} ${e.n}</div><div class="awem">${e.m}</div>
+            <div class="awsr">${e.sets.map((s,si)=>`<div class="aws${s.done?' done':''}" data-e="${ei}" data-s="${si}"><span class="wk">${s.w} kg</span><span class="wr">${s.r}x</span></div>`).join('')}</div></div>
+        `).join('');
+        document.querySelectorAll('.aws').forEach(s=>s.addEventListener('click',()=>{
+            const ei=+s.dataset.e,si=+s.dataset.s;
+            awData.exs[ei].sets[si].done=!awData.exs[ei].sets[si].done;
+            renderAW();
+        }));
+    }
+
+    document.getElementById('aw-fin').addEventListener('click',()=>{
+        clearInterval(awTimer);
+        D.w.push({d:new Date().toISOString(),t:awData.type,s:'done',du:awSec});
+        sv();buildP();upUI();awData=null;
+        document.getElementById('aw').classList.remove('show');
+        document.querySelector('.hint').style.display='none';
+        checkMile();confetti();
+        if(curTab==='t')switchTab('t');
+    });
+
+    /* ===== VOL RECHNER ===== */
+    function updVol(){
+        const mv={};
+        D.w.filter(w=>w.s==='done').forEach(w=>{(EX[w.t]||[]).forEach(e=>{if(!mv[e.m])mv[e.m]=0;e.s.forEach(s=>{mv[e.m]+=s[0]*s[1]})})});
+        const max=Math.max(...Object.values(mv),1);
+        document.getElementById('vr-bars').innerHTML=Object.entries(mv).sort((a,b)=>b[1]-a[1]).map(([m,v])=>`<div class="vbi"><div class="vbl">${m}</div><div class="vbbg"><div class="vbf" style="width:${v/max*100}%"></div></div><div class="vbv">${(v/1000).toFixed(1)}t</div></div>`).join('');
+        const total=Object.values(mv).reduce((s,v)=>s+v,0);
+        document.getElementById('vr-total').textContent=(total/1000).toFixed(1)+'t';
+    }
+
+    /* ===== DETAIL POPUP ===== */
     function openDet(idx){
         const w=D.w[idx];if(!w)return;
         document.getElementById('d-t').textContent='Workout '+(idx+1);
-        document.getElementById('d-d').textContent=fd(w.d);
+        document.getElementById('d-d').textContent=w.t+' - '+fd(w.d);
         const b=document.getElementById('d-b');b.innerHTML='';
         (EX[w.t]||[]).forEach(e=>{
             const d=document.createElement('div');d.className='ex';
@@ -391,28 +575,30 @@
     document.getElementById('d-x').addEventListener('click',()=>document.getElementById('det').classList.remove('show'));
     document.getElementById('det').addEventListener('click',e=>{if(e.target.id==='det')document.getElementById('det').classList.remove('show')});
 
-    // ===== UI =====
+    /* ===== UI UPDATE ===== */
     function upUI(){
-        const dn=D.w.filter(w=>w.s==='done').length;
-        document.getElementById('sw').textContent=dn;
+        document.getElementById('sw').textContent=D.w.filter(w=>w.s==='done').length;
         document.getElementById('ss').textContent=stk();
         document.getElementById('sv').textContent=vol()+'t';
     }
     upUI();
 
-    document.querySelectorAll('.ni').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
-
-    document.getElementById('fab').addEventListener('click',()=>{
-        D.w.push({d:new Date().toISOString(),t:TY[Math.random()*TY.length|0],s:'done',du:40+(Math.random()*50|0)});
-        sv();buildP();upUI();
-        document.querySelector('.hint').style.display='none';
+    /* ===== MILESTONES ===== */
+    function checkMile(){
         const cnt=D.w.filter(w=>w.s==='done').length;
-        MS.forEach(m=>{if(cnt===m&&!MR.includes(m)){MR.push(m);sv();setTimeout(()=>{document.getElementById('m-t').textContent=m+' Workouts!';document.getElementById('m-p').textContent=({1:'Erster Schritt!',5:'Fuenf geschafft!',10:'Zweistellig!',25:'Viertel-Hundert!',50:'Halbzeit!',75:'Drei Viertel!',100:'HUNDERT!',150:'Wahnsinn!',200:'Zweihundert!',365:'LEGENDE!'})[m]||'!';document.getElementById('ms').classList.add('show');const cs=['#0088ff','#00aaff','#0055cc','#00ddff','#fff'];for(let i=0;i<50;i++){const el=document.createElement('div');el.className='cf';el.style.left=Math.random()*100+'vw';el.style.width=(5+Math.random()*8)+'px';el.style.height=(5+Math.random()*8)+'px';el.style.background=cs[Math.random()*cs.length|0];el.style.borderRadius=Math.random()>.5?'50%':'1px';el.style.animationDelay=Math.random()*1.5+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}},400)}});
-    });
+        MILE.forEach(m=>{if(cnt===m&&!MR.includes(m)){MR.push(m);sv();setTimeout(()=>{
+            document.getElementById('m-t').textContent=m+' Workouts!';
+            document.getElementById('m-p').textContent=({1:'Erster Schritt!',5:'Fuenf geschafft!',10:'Zweistellig!',25:'Viertel-Hundert!',50:'Halbzeit!',75:'Drei Viertel!',100:'HUNDERT!',150:'Wahnsinn!',200:'Zweihundert!',365:'LEGENDE!'})[m]||'Mega!';
+            document.getElementById('ms').classList.add('show');
+        },500)}});
+    }
+    function confetti(){
+        const cs=['#0088ff','#00aaff','#0055cc','#00ddff','#fff'];
+        for(let i=0;i<40;i++){const el=document.createElement('div');el.className='cf';el.style.left=Math.random()*100+'vw';el.style.width=(5+Math.random()*8)+'px';el.style.height=(5+Math.random()*8)+'px';el.style.background=cs[Math.random()*cs.length|0];el.style.borderRadius=Math.random()>.5?'50%':'1px';el.style.animationDelay=Math.random()*1.5+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}
+    }
 
-    // ===== RENDER =====
-    const clk=new THREE.Clock();
-    let ready=false;
+    /* ===== RENDER LOOP ===== */
+    const clk=new THREE.Clock();let ready=false;
 
     function animate(){
         requestAnimationFrame(animate);
@@ -420,30 +606,36 @@
 
         if(!ready&&t>0.5){ready=true;document.getElementById('loader').classList.add('done')}
 
-        if(!drag){vel*=0.91;tS+=vel}
+        // Fresnel time uniform
+        fresnelMat.uniforms.uTime.value=t;
+
+        if(!drag){vel*=.91;tS+=vel}
         const mx=Math.max(0,(D.w.length-2)*1.9);
         tS=Math.max(-1.5,Math.min(mx+3,tS));
-        sY+=(tS-sY)*0.09;
+        sY+=(tS-sY)*.09;
 
         panels.forEach(p=>{const z=p.z+sY;p.mesh.position.z=z;if(p.glow)p.glow.position.z=z;if(p.ref)p.ref.position.z=z});
 
-        // Figure breathing + subtle sway
-        fig.position.y=-0.55+Math.sin(t*1.3)*0.01;
-        fig.rotation.y=Math.sin(t*0.4)*0.015;
+        // Figure animation
+        fig.position.y=.03+Math.sin(t*1.2)*.008;
+        fig.rotation.y=Math.sin(t*.35)*.012;
+        // Sync reflection
+        figRef.position.y=-fig.position.y;
+        figRef.rotation.y=fig.rotation.y;
+
+        // Arm sway
+        armL.rotation.x=Math.sin(t*.8)*.02;
+        armR.rotation.x=-Math.sin(t*.8)*.02;
 
         // Light pulse
-        bl.intensity=12+Math.sin(t*0.7)*2.5;
-        fl.intensity=4+Math.sin(t*1.1)*1;
+        bl.intensity=14+Math.sin(t*.7)*2.5;
+        flLight.intensity=4+Math.sin(t*1.1)*1;
 
-        // First panel glow pulse
-        if(panels[0]&&panels[0].glow)panels[0].glow.material.opacity=0.18+Math.sin(t*2.2)*0.06;
+        if(panels[0]&&panels[0].glow)panels[0].glow.material.opacity=.18+Math.sin(t*2.2)*.06;
+        edgeMesh.material.opacity=.5+Math.sin(t*1.5)*.15;
 
-        // Edge glow pulse
-        edge.material.opacity=0.5+Math.sin(t*1.5)*0.15;
-
-        // Particles
         const pp=pG.attributes.position.array;
-        for(let i=0;i<PC;i++){pp[i*3+1]+=Math.sin(t+i)*0.001;pp[i*3]+=Math.cos(t*0.3+i*0.3)*0.0006}
+        for(let i=0;i<PC;i++){pp[i*3+1]+=Math.sin(t+i)*.001;pp[i*3]+=Math.cos(t*.3+i*.3)*.0006}
         pG.attributes.position.needsUpdate=true;
 
         R.render(sc,cam);
